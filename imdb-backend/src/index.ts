@@ -8,7 +8,8 @@ import { RequestHandler } from "express";
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT;
+const omdbBaseUrl = process.env.OMDB_BASE_URL;
 
 // Middleware
 app.use(cors());
@@ -39,7 +40,7 @@ const searchMovies: RequestHandler = async (req, res) => {
     }
 
     const response = await axios.get<SearchResponse>(
-      `http://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&s=${query}`
+      `${omdbBaseUrl}/?apikey=${process.env.OMDB_API_KEY}&s=${query}`
     );
     res.json(response.data);
     return;
@@ -54,7 +55,7 @@ const getMovieDetails: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const response = await axios.get(
-      `http://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&i=${id}`
+      `${omdbBaseUrl}/?apikey=${process.env.OMDB_API_KEY}&i=${id}`
     );
     res.json(response.data);
     return;
@@ -68,5 +69,5 @@ app.get("/api/movies/search", searchMovies);
 app.get("/api/movies/:id", getMovieDetails);
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
