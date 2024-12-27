@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getMovieDetails } from "../services/api";
+import { MovieDetailsType } from "../types/movies";
 
 const MovieDetails = () => {
   const { id } = useParams();
-  const [movie, setMovie] = useState<any>(null);
+  const [movie, setMovie] = useState<MovieDetailsType>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

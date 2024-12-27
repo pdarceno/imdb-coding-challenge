@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { searchMovies } from "../services/api";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { searchMovies } from "../services/api";
+import SearchBar from "./SearchBar";
+import { MovieSearchResultType } from "../types/movies";
 
 const MovieSearch = () => {
-  const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<MovieSearchResultType[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = async (query: string) => {
     setLoading(true);
     try {
       const data = await searchMovies(query);
@@ -21,25 +21,10 @@ const MovieSearch = () => {
 
   return (
     <div className="p-4">
-      <form onSubmit={handleSearch} className="mb-4">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="px-4 py-2 border rounded-lg mr-2"
-          placeholder="Search movies..."
-        />
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          disabled={loading}
-        >
-          {loading ? "Searching..." : "Search"}
-        </button>
-      </form>
+      <SearchBar onSearch={handleSearch} isLoading={loading} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {movies.map((movie: any) => (
+        {movies.map((movie) => (
           <Link to={`/movie/${movie.imdbID}`} key={movie.imdbID}>
             <div key={movie.imdbID} className="border rounded-lg p-4">
               <img

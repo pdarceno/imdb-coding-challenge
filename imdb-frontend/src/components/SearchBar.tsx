@@ -2,9 +2,13 @@ import React, { useState } from "react";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
+  isLoading?: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  onSearch,
+  isLoading = false,
+}) => {
   const [query, setQuery] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -27,8 +31,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       <button
         type="submit"
         className="bg-blue-600 text-white px-6 py-3 font-semibold hover:bg-blue-700 transition"
+        disabled={isLoading}
       >
-        Search
+        {isLoading ? "Searching..." : "Search"}
       </button>
     </form>
   );
