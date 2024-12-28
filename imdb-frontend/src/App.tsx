@@ -5,7 +5,7 @@ import MovieDetails from "./components/MovieDetails";
 function App() {
   return (
     <Router>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <Routes>
           <Route path="/" element={<MovieSearch />} />
           <Route path="/movie/:id" element={<MovieDetails />} />
