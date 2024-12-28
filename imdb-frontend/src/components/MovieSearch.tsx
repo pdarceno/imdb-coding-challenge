@@ -13,7 +13,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { movieCache } from "../utils/cache";
-import EmptySearchState from "./EmptySearchState";
+import EmptySearch from "./EmptySearch";
+import Home from "./Home";
 
 const MovieSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -101,11 +102,12 @@ const MovieSearch = () => {
   };
 
   // Show empty states when appropriate
-  if (
-    !searchQuery ||
-    (searchQuery && movies.length === 0 && !isLoading && !error)
-  ) {
-    return <EmptySearchState />;
+  if (!searchQuery) {
+    return <Home />;
+  }
+
+  if (searchQuery && !isLoading && !error && movies.length === 0) {
+    return <EmptySearch />;
   }
 
   return (

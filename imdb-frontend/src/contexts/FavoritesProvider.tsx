@@ -8,6 +8,12 @@ import {
 } from "react";
 import { useToast } from "@/hooks/use-toast";
 
+// Define the favorite movie type with id and title
+interface FavoriteMovie {
+  id: string;
+  title: string;
+}
+
 // Mock API call
 const mockApiCall = async () => {
   return new Promise((resolve) => {
@@ -19,8 +25,8 @@ const mockApiCall = async () => {
 
 // Define context properties
 interface FavoritesContextProps {
-  favorites: string[];
-  toggleFavorite: (movieId: string) => Promise<void>;
+  favorites: FavoriteMovie[];
+  toggleFavorite: (movieId: string, movieTitle: string) => Promise<void>;
   loading: Record<string, boolean>;
 }
 
@@ -33,7 +39,7 @@ interface FavoritesProviderProps {
 }
 
 export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
-  const [favorites, setFavorites] = useState<string[]>(() => {
+  const [favorites, setFavorites] = useState<FavoriteMovie[]>(() => {
     // Load from localStorage on initial render
     const savedFavorites = localStorage.getItem("favorites");
     return savedFavorites ? JSON.parse(savedFavorites) : [];
@@ -48,26 +54,28 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
   }, [favorites]);
 
   const toggleFavorite = useCallback(
-    async (movieId: string) => {
+    async (movieId: string, movieTitle: string) => {
       setLoading((prev) => ({ ...prev, [movieId]: true }));
 
       try {
-        const isFavorited = favorites.includes(movieId);
+        const isFavorited = favorites.some((movie) => movie.id === movieId);
 
         // Make API call
         await mockApiCall();
 
         // Update local state
         setFavorites((prev) =>
-          isFavorited ? prev.filter((id) => id !== movieId) : [...prev, movieId]
+          isFavorited
+            ? prev.filter((movie) => movie.id !== movieId)
+            : [...prev, { id: movieId, title: movieTitle }]
         );
-
-        console.log("showing toast");
 
         // Show toast
         toast({
           title: isFavorited ? "Removed!" : "Added!",
-          description: "Favorites have been updated.",
+          description: isFavorited
+            ? `${movieTitle} removed from favorites`
+            : `${movieTitle} added to favorites`,
           variant: "default",
         });
       } catch (error) {
