@@ -12,7 +12,7 @@ const ClickableBadge = ({ id, title }: ClickableBadgeProps) => {
   return (
     <Badge
       key={id}
-      className="px-3 py-1 rounded-full text-sm bg-accent-foreground text-secondary hover:bg-accent cursor-pointer"
+      className="px-3 py-1 rounded-full text-sm bg-accent-foreground text-secondary hover:bg-accent hover:text-foreground cursor-pointer"
       onClick={() => navigate(`/movie/${id}`)}
     >
       {title}

@@ -5,7 +5,7 @@ const MovieDetailsSkeleton = () => {
     <div className="min-h-[calc(100vh-268.85px)]">
       <div className="relative h-full">
         <div className="relative max-w-screen-xl mx-auto py-4 sm:py-6">
-          <div className="container mx-auto px-5">
+          <div className="mx-auto px-5">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Poster Skeleton */}
               <div className="md:w-1/4">
