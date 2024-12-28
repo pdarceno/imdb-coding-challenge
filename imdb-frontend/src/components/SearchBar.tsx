@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Search } from "lucide-react";
 import { SEARCH_CONSTANTS } from "@/constants";
+import ThemeToggle from "./ThemeToggle";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -123,7 +124,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       </div>
       <form
         onSubmit={handleSubmit}
-        className="flex-1 flex items-center bg-background shadow-md rounded-lg overflow-hidden"
+        className="flex-1 flex items-center overflow-hidden"
       >
         <div className="flex items-center flex-grow bg-input">
           <input
@@ -134,6 +135,9 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
             className="w-full p-3 bg-transparent text-primary focus:outline-none"
           />
           <Search className="h-5 w-5 m-3 text-gray-400" />
+        </div>
+        <div className="flex items-center ml-4">
+          <ThemeToggle />
         </div>
       </form>
     </div>
