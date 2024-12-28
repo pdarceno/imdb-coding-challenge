@@ -2,8 +2,13 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const searchMovies = async (query: string) => {
-  const response = await axios.get(`${API_URL}/movies/search?query=${query}`);
+export const searchMovies = async (query: string, page: number = 1) => {
+  const response = await axios.get(`${API_URL}/movies/search`, {
+    params: {
+      query,
+      page,
+    },
+  });
   return response.data;
 };
 
