@@ -93,9 +93,9 @@ const MovieDetails = () => {
     "N/A";
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen w-full bg-gray-900 text-white">
       {/* Backdrop image with overlay */}
-      <div className="relative h-full">
+      <div className="relative h-full w-full">
         {isValidField(movie.Poster) && (
           <img
             src={movie.Poster}
@@ -110,8 +110,8 @@ const MovieDetails = () => {
         )}
 
         {/* Content */}
-        <div className="relative pt-8">
-          <div className="container mx-auto px-5">
+        <div className="relative max-w-4xl mx-auto py-5">
+          <div className="w-full px-5">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Poster */}
               <div className="md:w-1/4">
@@ -172,7 +172,7 @@ const MovieDetails = () => {
                     {movie.Genre!.split(",").map((genre) => (
                       <Badge
                         key={genre}
-                        className="px-3 py-1 rounded-full text-sm text-white"
+                        className="px-3 py-1 rounded-full text-sm bg-accent-foreground text-secondary"
                       >
                         {genre.trim()}
                       </Badge>

@@ -114,14 +114,14 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center w-full max-w-7xl bg-white shadow-md rounded-lg overflow-hidden mb-6"
+      className="flex items-center w-full max-w-7xl bg-background shadow-md rounded-lg overflow-hidden mb-6"
     >
       <input
         type="text"
         placeholder="Search for a movie..."
         value={query}
         onChange={handleChange}
-        className="flex-grow p-3 text-gray-700 focus:outline-none"
+        className="flex-grow p-3 text-gray-700 bg-input text-primary focus:outline-none"
       />
     </form>
   );

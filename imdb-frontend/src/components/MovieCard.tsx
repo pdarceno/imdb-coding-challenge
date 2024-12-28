@@ -9,7 +9,7 @@ interface MovieCardProps {
 const MovieCard = ({ movie }: MovieCardProps) => {
   return (
     <Link to={`/movie/${movie.imdbID}`}>
-      <Card className="w-[160px] sm:w-[193px] bg-gray-900 hover:shadow-lg transition-shadow overflow-hidden">
+      <Card className="w-[160px] sm:w-[193px] bg-card hover:shadow-lg transition-shadow overflow-hidden">
         <CardHeader className="p-0">
           <div className="relative w-full h-60 sm:h-72">
             {" "}
@@ -27,7 +27,7 @@ const MovieCard = ({ movie }: MovieCardProps) => {
         </CardHeader>
 
         <CardContent className="p-3 sm:p-4 space-y-1 flex-shrink-0 h-[90px] sm:h-[100px]">
-          <h3 className="text-sm sm:text-base text-white font-medium line-clamp-2">
+          <h3 className="text-sm sm:text-base text-primary font-medium line-clamp-2">
             {movie.Title}
           </h3>
           <p className="text-xs text-gray-400">{movie.Year}</p>

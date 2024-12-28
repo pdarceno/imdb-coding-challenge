@@ -9,8 +9,8 @@ interface MovieListProps {
 }
 
 const MovieList = ({ movies, title, isLoading }: MovieListProps) => {
-  // Create an array of 12 skeleton cards for loading state
-  const skeletonCards = Array(12).fill(null);
+  // Create an array of 10 skeleton cards for loading state
+  const skeletonCards = Array(10).fill(null);
 
   return (
     <div className="w-full max-w-7xl mx-auto p-4 sm:p-6">
