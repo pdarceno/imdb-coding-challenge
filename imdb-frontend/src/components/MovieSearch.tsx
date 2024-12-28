@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { searchMovies } from "../services/api";
-import SearchBar from "./SearchBar";
 import { MovieSearchResultType } from "../types/movies";
 import MovieList from "./MovieList";
 import {
@@ -15,21 +15,27 @@ import {
 import { movieCache } from "../utils/cache";
 
 const MovieSearch = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [movies, setMovies] = useState<MovieSearchResultType[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isCached, setIsCached] = useState(false);
 
-  const moviesPerPage = 10; // OMDB API returns 10 results per page
+  const moviesPerPage = 10;
   const totalPages = Math.ceil(totalResults / moviesPerPage);
+  const searchQuery = searchParams.get("search") || "";
+
+  useEffect(() => {
+    if (searchQuery) {
+      handleSearch(searchQuery, 1);
+    }
+  }, [searchQuery]);
 
   const handleSearch = async (query: string, page: number = 1) => {
     setError(null);
     setIsLoading(true);
-    setSearchQuery(query);
 
     try {
       const cacheKey = movieCache.createKey(query, page);
@@ -51,6 +57,7 @@ const MovieSearch = () => {
   const handlePageChange = (page: number) => {
     if (searchQuery) {
       handleSearch(searchQuery, page);
+      setSearchParams({ search: searchQuery, page: page.toString() });
     }
   };
 
@@ -63,14 +70,11 @@ const MovieSearch = () => {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    // Always show first page
     pages.push(1);
 
-    // Calculate middle pages
     let start = Math.max(currentPage - 1, 2);
     let end = Math.min(currentPage + 1, totalPages - 1);
 
-    // Adjust if at the start or end
     if (currentPage <= 2) {
       end = 4;
     }
@@ -78,30 +82,25 @@ const MovieSearch = () => {
       start = totalPages - 3;
     }
 
-    // Add ellipsis if needed
     if (start > 2) {
-      pages.push(-1); // -1 represents ellipsis
+      pages.push(-1);
     }
 
-    // Add middle pages
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
 
-    // Add ellipsis if needed
     if (end < totalPages - 1) {
-      pages.push(-1); // -1 represents ellipsis
+      pages.push(-1);
     }
 
-    // Always show last page
     pages.push(totalPages);
 
     return pages;
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6">
-      <SearchBar onSearch={(query) => handleSearch(query, 1)} />
+    <div className="container mx-auto p-6">
       {isCached && (
         <p className="text-sm text-gray-500 mb-2">Results loaded from cache</p>
       )}

@@ -108,7 +108,7 @@ const MovieDetails = () => {
         )}
 
         {/* Content */}
-        <div className="relative max-w-4xl mx-auto py-5">
+        <div className="relative max-w-screen-xl mx-auto py-4 sm:py-6">
           <div className="w-full px-5">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Poster */}

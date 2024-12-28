@@ -113,7 +113,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   };
 
   return (
-    <div className="flex items-center w-full max-w-7xl">
+    <div className="flex items-center w-full max-w-screen-xl mx-auto p-4 sm:p-6">
       <div className="flex items-center mr-4">
         <img
           src="/imdb.svg"
@@ -125,7 +125,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
         onSubmit={handleSubmit}
         className="flex-1 flex items-center bg-background shadow-md rounded-lg overflow-hidden"
       >
-        <div className="flex items-center flex-grow px-3 bg-input">
+        <div className="flex items-center flex-grow bg-input">
           <input
             type="text"
             placeholder="Search IMDb"
@@ -133,7 +133,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
             onChange={handleChange}
             className="w-full p-3 bg-transparent text-primary focus:outline-none"
           />
-          <Search className="h-5 w-5 text-gray-400" />
+          <Search className="h-5 w-5 m-3 text-gray-400" />
         </div>
       </form>
     </div>
