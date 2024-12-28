@@ -14,11 +14,7 @@ const MovieCard = ({ movie }: MovieCardProps) => {
         <CardHeader className="p-0">
           <AspectRatio ratio={158 / 240}>
             <img
-              src={
-                movie.Poster !== "N/A"
-                  ? movie.Poster
-                  : "/api/placeholder/193/287"
-              }
+              src={movie.Poster !== "N/A" ? movie.Poster : "/imdb.svg"}
               alt={movie.Title}
               className="object-cover w-full h-full"
             />

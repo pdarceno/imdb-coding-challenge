@@ -96,13 +96,11 @@ const MovieDetails = () => {
     <div className="min-h-screen w-full bg-gray-900 text-white">
       {/* Backdrop image with overlay */}
       <div className="relative h-full w-full">
-        {isValidField(movie.Poster) && (
-          <img
-            src={movie.Poster}
-            alt={movie.Title}
-            className="absolute inset-0 h-full w-full object-cover opacity-30 blur-3xl"
-          />
-        )}
+        <img
+          src={movie.Poster !== "N/A" ? movie.Poster : "/imdb.svg"}
+          alt={movie.Title}
+          className="absolute inset-0 h-full w-full object-cover opacity-30 blur-3xl"
+        />
         {isCached && (
           <p className="text-sm text-gray-500 mb-2">
             Results loaded from cache
@@ -115,17 +113,11 @@ const MovieDetails = () => {
             <div className="flex flex-col md:flex-row gap-8">
               {/* Poster */}
               <div className="md:w-1/4">
-                {isValidField(movie.Poster) ? (
-                  <img
-                    src={movie.Poster}
-                    alt={movie.Title}
-                    className="w-full rounded-lg shadow-2xl"
-                  />
-                ) : (
-                  <div className="w-full aspect-[2/3] bg-gray-800 rounded-lg flex items-center justify-center">
-                    No Poster Available
-                  </div>
-                )}
+                <img
+                  src={movie.Poster !== "N/A" ? movie.Poster : "/imdb.svg"}
+                  alt={movie.Title}
+                  className="w-full rounded-lg shadow-2xl"
+                />
               </div>
 
               {/* Details */}
