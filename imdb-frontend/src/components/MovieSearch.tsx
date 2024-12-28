@@ -13,6 +13,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { movieCache } from "../utils/cache";
+import EmptySearchState from "./EmptySearchState";
 
 const MovieSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -98,6 +99,14 @@ const MovieSearch = () => {
 
     return pages;
   };
+
+  // Show empty states when appropriate
+  if (
+    !searchQuery ||
+    (searchQuery && movies.length === 0 && !isLoading && !error)
+  ) {
+    return <EmptySearchState />;
+  }
 
   return (
     <div className="container mx-auto p-6">
