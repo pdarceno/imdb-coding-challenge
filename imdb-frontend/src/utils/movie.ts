@@ -4,7 +4,7 @@ export const isValidField = (value: string | undefined): boolean => {
   return value !== undefined && value !== "" && value !== "N/A";
 };
 
-// Optional: Additional helper for arrays
+// Required: helper for arrays
 export const isValidArrayField = (value: string | undefined): string[] => {
   if (!isValidField(value)) return [];
   return value!.split(",").map((it) => it.trim());
