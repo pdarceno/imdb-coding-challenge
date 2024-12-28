@@ -11,6 +11,8 @@ import {
   isEpisode,
 } from "../utils/movie";
 import { movieCache } from "../utils/cache";
+import { useFavorites } from "@/contexts/FavoritesProvider";
+import { Plus, X } from "lucide-react";
 
 const renderSeasonInfo = (movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
@@ -39,6 +41,12 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState<MovieDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [isCached, setIsCached] = useState(false);
+  const {
+    favorites,
+    toggleFavorite,
+    loading: loadingFavorite,
+  } = useFavorites();
+  const isFavorited = favorites.includes(id!);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -111,13 +119,41 @@ const MovieDetails = () => {
         <div className="relative max-w-screen-xl mx-auto py-4 sm:py-6">
           <div className="w-full px-5">
             <div className="flex flex-col md:flex-row gap-8">
-              {/* Poster */}
-              <div className="md:w-1/4">
+              <div className="md:w-1/4 relative">
                 <img
                   src={movie.Poster !== "N/A" ? movie.Poster : "/imdb.svg"}
                   alt={movie.Title}
                   className="w-full rounded-lg shadow-2xl"
                 />
+                <div
+                  className={`absolute top-0 left-0 cursor-pointer ${
+                    loadingFavorite[movie.imdbID] ? "opacity-50" : ""
+                  }`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    if (!loadingFavorite[movie.imdbID]) {
+                      toggleFavorite(movie.imdbID);
+                    }
+                  }}
+                  aria-label={
+                    isFavorited ? "Remove from favorites" : "Add to favorites"
+                  }
+                >
+                  <img
+                    src="/bookmark.svg"
+                    alt=""
+                    className="w-10 h-full rounded-br-lg opacity-50"
+                  />
+
+                  {/* Overlay the Icon */}
+                  <div className="absolute top-3 left-2">
+                    {isFavorited ? (
+                      <X className="w-6 h-6" />
+                    ) : (
+                      <Plus className="w-6 h-6" />
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Details */}

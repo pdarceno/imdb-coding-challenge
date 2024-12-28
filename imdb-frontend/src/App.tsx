@@ -5,6 +5,8 @@ import { useInvalidateCache } from "./hooks/useInvalidateCache";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { ThemeProvider } from "./contexts/ThemeProvider";
+import { FavoritesProvider } from "./contexts/FavoritesProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 // Add dark class
 document.documentElement.classList.add("dark");
@@ -13,14 +15,17 @@ const App = () => {
   useInvalidateCache(30); // Clear cache every 30 minutes
   return (
     <Router>
-      <ThemeProvider>
-        <Header />
-        <Routes>
-          <Route path="/" element={<MovieSearch />} />
-          <Route path="/movie/:id" element={<MovieDetails />} />
-        </Routes>
-        <Footer />
-      </ThemeProvider>
+      <Toaster />
+      <FavoritesProvider>
+        <ThemeProvider>
+          <Header />
+          <Routes>
+            <Route path="/" element={<MovieSearch />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
+          </Routes>
+          <Footer />
+        </ThemeProvider>
+      </FavoritesProvider>
     </Router>
   );
 };

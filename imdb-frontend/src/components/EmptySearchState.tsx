@@ -20,13 +20,13 @@ const EmptySearchState = () => {
             Shrek
           </Badge>
           <Badge
-            key="favorite-1"
+            key="favorite-2"
             className="px-3 py-1 rounded-full text-sm bg-accent-foreground text-secondary"
           >
             Shrek 2
           </Badge>
           <Badge
-            key="favorite-1"
+            key="favorite-3"
             className="px-3 py-1 rounded-full text-sm bg-accent-foreground text-secondary"
           >
             Shrek the Third

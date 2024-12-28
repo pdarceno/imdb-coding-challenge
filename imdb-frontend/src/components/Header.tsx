@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import SearchBar from "./SearchBar";
+import HeaderContent from "./HeaderContent";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Header = () => {
   return (
     <header className="w-full border-b border-border/40 bg-card backdrop-blur">
       <div className="mx-auto flex h-16 items-center">
-        <SearchBar onSearch={handleSearch} />
+        <HeaderContent onSearch={handleSearch} />
       </div>
     </header>
   );
