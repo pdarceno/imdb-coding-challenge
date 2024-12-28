@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { Search } from "lucide-react";
 import { SEARCH_CONSTANTS } from "@/constants";
 
 interface SearchBarProps {
@@ -112,18 +113,30 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex items-center w-full max-w-7xl bg-background shadow-md rounded-lg overflow-hidden mb-6"
-    >
-      <input
-        type="text"
-        placeholder="Search for a movie..."
-        value={query}
-        onChange={handleChange}
-        className="flex-grow p-3 text-gray-700 bg-input text-primary focus:outline-none"
-      />
-    </form>
+    <div className="flex items-center w-full max-w-7xl">
+      <div className="flex items-center mr-4">
+        <img
+          src="/imdb.svg"
+          alt="imdb logo"
+          className="h-8 w-16 object-contain"
+        />
+      </div>
+      <form
+        onSubmit={handleSubmit}
+        className="flex-1 flex items-center bg-background shadow-md rounded-lg overflow-hidden"
+      >
+        <div className="flex items-center flex-grow px-3 bg-input">
+          <input
+            type="text"
+            placeholder="Search IMDb"
+            value={query}
+            onChange={handleChange}
+            className="w-full p-3 bg-transparent text-primary focus:outline-none"
+          />
+          <Search className="h-5 w-5 text-gray-400" />
+        </div>
+      </form>
+    </div>
   );
 };
 
