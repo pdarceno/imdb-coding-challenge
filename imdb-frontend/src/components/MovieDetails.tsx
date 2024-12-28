@@ -79,7 +79,7 @@ const MovieDetails = () => {
 
   if (!movie || movie.Response === "False") {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-8">
+      <div className="min-h-[calc(100vh-268.85px)] bg-gray-900 text-white p-8">
         {movie?.Error || "Movie not found"}
       </div>
     );
@@ -93,7 +93,7 @@ const MovieDetails = () => {
     "N/A";
 
   return (
-    <div className="min-h-screen w-full bg-gray-900 text-white">
+    <div className="min-h-[calc(100vh-268.85px)] w-full bg-gray-900 text-white">
       {/* Backdrop image with overlay */}
       <div className="relative h-full w-full">
         <img
