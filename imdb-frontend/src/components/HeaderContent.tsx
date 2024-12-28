@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Search, X } from "lucide-react";
 import { SEARCH_CONSTANTS } from "@/constants";
 import ThemeToggle from "./ThemeToggle";
+import MainMenu from "./MainMenu";
 
 interface HeaderContentProps {
   onSearch: (query: string) => void;
@@ -121,12 +122,15 @@ const HeaderContent = ({ onSearch }: HeaderContentProps) => {
 
   return (
     <div className="flex items-center w-full max-w-screen-xl mx-auto p-4 sm:p-6">
-      <div className="flex items-center mr-4">
+      <div className="flex items-center mr-4 hidden sm:block">
         <img
           src="/imdb.svg"
           alt="imdb logo"
           className="h-8 w-16 object-contain"
         />
+      </div>
+      <div className="flex items-center mr-4">
+        <MainMenu />
       </div>
       <form
         onSubmit={handleSubmit}
@@ -149,7 +153,7 @@ const HeaderContent = ({ onSearch }: HeaderContentProps) => {
             <Search className="h-6 w-6 mx-3 my-2 text-gray-400" />
           )}
         </div>
-        <div className="flex items-center ml-4">
+        <div className="flex items-center ml-4 hidden sm:block">
           <ThemeToggle />
         </div>
       </form>

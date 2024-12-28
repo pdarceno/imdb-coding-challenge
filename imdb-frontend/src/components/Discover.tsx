@@ -1,11 +1,6 @@
 import { Search } from "lucide-react";
 import ClickableBadge from "@/utils/ClickableBadge";
-
-const suggestedMovies = [
-  { id: "tt0126029", title: "Shrek" },
-  { id: "tt0298148", title: "Shrek 2" },
-  { id: "tt0413267", title: "Shrek the Third" },
-];
+import { suggestedMovies } from "@/constants";
 
 const Discover = () => {
   return (
