@@ -1,12 +1,10 @@
 import { Menu, Search, Star } from "lucide-react";
-import { useState } from "react";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetFooter,
 } from "@/components/ui/sheet";
 import {
   Accordion,
@@ -27,19 +25,24 @@ const MainMenu = () => {
     <Sheet>
       <SheetTrigger asChild>
         <button
-          className="h-8 w-8 cursor-pointer"
+          className="flex items-center gap-2 p-2 cursor-pointer"
           aria-label="Open navigation menu"
         >
-          <Menu className="h-full w-full" />
+          <Menu className="h-5 w-5" />
+          <span className="hidden sm:block">Menu</span>
         </button>
       </SheetTrigger>
       <SheetContent side="left" className="w-80 overflow-y-auto flex flex-col">
-        <SheetHeader className="relative">
-          <SheetTitle className="text-center">
-            Welcome to the IMDb clone!
+        <SheetHeader>
+          <SheetTitle className="flex gap-2">
+            <img
+              src="/imdb.svg"
+              alt="imdb logo"
+              className="h-8 w-16 object-contain"
+            />
+            Clone!
           </SheetTitle>
         </SheetHeader>
-
         <nav className="mt-8 flex flex-col gap-8">
           {/* Accordion Sections */}
           <Accordion type="single" collapsible className="w-full">
@@ -109,7 +112,6 @@ const MainMenu = () => {
             </AccordionItem>
           </Accordion>
         </nav>
-
         {/* Theme Selector Footer */}
         <div className="mt-auto pt-8 border-t">
           <ThemeToggle />

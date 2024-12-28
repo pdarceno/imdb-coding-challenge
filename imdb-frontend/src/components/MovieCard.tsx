@@ -15,17 +15,33 @@ const MovieCard = ({ movie }: MovieCardProps) => {
 
   return (
     <Card className="h-full bg-card hover:shadow-lg transition-shadow overflow-hidden relative">
-      <Link to={`/movie/${movie.imdbID}`} className="block w-full sm:w-auto">
-        <CardHeader className="p-0 relative">
+      <Link to={`/movie/${movie.imdbID}`} className="block w-full">
+        <CardHeader className="p-0">
           {/* AspectRatio ensures the correct dimensions */}
           <AspectRatio ratio={158 / 240}>
-            <div className="relative">
-              {/* Movie Poster */}
-              <img
-                src={movie.Poster !== "N/A" ? movie.Poster : "/imdb.svg"}
-                alt={movie.Title}
-                className="object-cover w-full h-full"
-              />
+            <div className="relative w-full h-full bg-muted hover:opacity-70">
+              {/* Movie Poster with fallback */}
+              {movie.Poster && movie.Poster !== "N/A" ? (
+                <img
+                  src={movie.Poster}
+                  alt={movie.Title}
+                  className="object-cover w-full h-full"
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.src = "/imdb.svg";
+                    img.classList.remove("object-cover");
+                    img.classList.add("object-contain", "p-4");
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center p-4 bg-muted">
+                  <img
+                    src="/imdb.svg"
+                    alt="IMDb Logo"
+                    className="w-full h-auto object-contain opacity-50"
+                  />
+                </div>
+              )}
 
               {/* Bookmark */}
 
@@ -46,15 +62,15 @@ const MovieCard = ({ movie }: MovieCardProps) => {
                 <img
                   src="/bookmark.svg"
                   alt=""
-                  className="w-8 h-full rounded-br-lg opacity-50"
+                  className="w-12 md:w-8 h-full rounded-tl-lg opacity-70"
                 />
 
                 {/* Overlay the Icon */}
-                <div className="absolute top-3 left-2">
+                <div className="absolute top-3 left-2 text-white">
                   {isFavorited ? (
-                    <X className="w-4 h-4" />
+                    <X className="w-8 h-8 md:w-4 md:h-4" />
                   ) : (
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-8 h-8 md:w-4 md:h-4" />
                   )}
                 </div>
               </div>
@@ -63,9 +79,9 @@ const MovieCard = ({ movie }: MovieCardProps) => {
         </CardHeader>
       </Link>
 
-      <CardContent className="p-3 sm:p-4 space-y-1">
-        <Link to={`/movie/${movie.imdbID}`} className="block w-full sm:w-auto">
-          <h3 className="text-sm sm:text-base text-primary font-medium line-clamp-2">
+      <CardContent className="p-3 space-y-1">
+        <Link to={`/movie/${movie.imdbID}`} className="block">
+          <h3 className="text-sm font-medium text-primary line-clamp-2 hover:underline">
             {movie.Title}
           </h3>
         </Link>

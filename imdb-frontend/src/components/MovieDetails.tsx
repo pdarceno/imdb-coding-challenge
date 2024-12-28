@@ -18,7 +18,7 @@ const renderSeasonInfo = (movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
     return (
       <div>
-        <h2 className="text-muted-foreground mb-1">Seasons</h2>
+        <h2 className="text-muted-foreground font-semibold mb-1">Seasons</h2>
         <p>{movie.totalSeasons} Seasons</p>
       </div>
     );
@@ -26,7 +26,9 @@ const renderSeasonInfo = (movie: MovieDetailsType) => {
   if (isEpisode(movie)) {
     return (
       <div>
-        <h2 className="text-muted-foreground mb-1">Episode Info</h2>
+        <h2 className="text-muted-foreground font-semibold mb-1">
+          Episode Info
+        </h2>
         <p>
           Season {movie.Season}, Episode {movie.Episode}
         </p>
@@ -110,7 +112,7 @@ const MovieDetails = () => {
           className="absolute inset-0 h-full w-full object-cover opacity-30 blur-3xl"
         />
         {isCached && (
-          <p className="text-sm text-muted-foreground mb-2">
+          <p className="text-sm text-muted-foreground font-semibold mb-2">
             Results loaded from cache
           </p>
         )}
@@ -118,13 +120,47 @@ const MovieDetails = () => {
         {/* Content */}
         <div className="relative max-w-screen-xl mx-auto py-4 sm:py-6">
           <div className="w-full px-5">
+            {/* Title moved to top on mobile */}
+            <h1 className="text-4xl font-bold text-foreground mb-1 md:hidden">
+              {movie.Title}
+            </h1>
+
+            {/* Release and quick notes, hidden on mobile, shown on desktop */}
+            <div className="sm:hidden flex items-center gap-4 mb-4 text-muted-foreground font-semibold">
+              {[
+                isValidField(movie.Released) && `Released ${movie.Released}`,
+                isValidField(movie.Runtime) && movie.Runtime,
+                isValidField(movie.Rated) && movie.Rated,
+              ]
+                .filter(Boolean)
+                .join(" • ")}
+            </div>
+
             <div className="flex flex-col md:flex-row gap-8">
               <div className="md:w-1/4 relative">
-                <img
-                  src={movie.Poster !== "N/A" ? movie.Poster : "/imdb.svg"}
-                  alt={movie.Title}
-                  className="w-full rounded-lg shadow-2xl"
-                />
+                <div className="relative w-full aspect-[2/3] bg-muted hover:opacity-90 rounded-lg">
+                  {movie.Poster && movie.Poster !== "N/A" ? (
+                    <img
+                      src={movie.Poster}
+                      alt={movie.Title}
+                      className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                      onError={(e) => {
+                        const img = e.target as HTMLImageElement;
+                        img.src = "/imdb.svg";
+                        img.classList.remove("object-cover");
+                        img.classList.add("object-contain", "p-4");
+                      }}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center p-4 bg-muted rounded-lg">
+                      <img
+                        src="/imdb.svg"
+                        alt="IMDb Logo"
+                        className="w-full h-auto object-contain opacity-50"
+                      />
+                    </div>
+                  )}
+                </div>
                 <div
                   className={`absolute top-0 left-0 cursor-pointer ${
                     loadingFavorite[movie.imdbID] ? "opacity-50" : ""
@@ -142,15 +178,15 @@ const MovieDetails = () => {
                   <img
                     src="/bookmark.svg"
                     alt=""
-                    className="w-10 h-full rounded-br-lg opacity-50"
+                    className="w-12 md:w-8 h-full rounded-tl-lg opacity-70"
                   />
 
                   {/* Overlay the Icon */}
-                  <div className="absolute top-3 left-2">
+                  <div className="absolute top-3 left-2 text-white">
                     {isFavorited ? (
-                      <X className="w-6 h-6" />
+                      <X className="w-8 h-8 md:w-4 md:h-4" />
                     ) : (
-                      <Plus className="w-6 h-6" />
+                      <Plus className="w-8 h-8 md:w-4 md:h-4" />
                     )}
                   </div>
                 </div>
@@ -159,11 +195,12 @@ const MovieDetails = () => {
               {/* Details */}
               <div className="md:w-3/4">
                 <div className="flex justify-between items-start mb-4">
-                  {/* Dont need validating */}
-                  <h1 className="text-4xl font-bold text-foreground">
+                  {/* Title hidden on mobile, shown on desktop */}
+                  <h1 className="hidden md:block text-4xl font-bold text-foreground">
                     {movie.Title}
                   </h1>
-                  <div className="flex items-center gap-8">
+                  {/* Rating hidden on mobile, shown on desktop */}
+                  <div className="hidden md:flex items-center gap-8">
                     {imdbRating !== "N/A" && (
                       <div>
                         <div className="flex items-center gap-2">
@@ -171,10 +208,12 @@ const MovieDetails = () => {
                           <span className="text-2xl font-bold">
                             {imdbRating.split("/")[0]}
                           </span>
-                          <span className="text-muted-foreground">/10</span>
+                          <span className="text-muted-foreground font-semibold">
+                            /10
+                          </span>
                         </div>
                         {isValidField(movie.imdbVotes) && (
-                          <div className="text-muted-foreground text-sm text-center">
+                          <div className="text-muted-foreground font-semibold text-sm text-center">
                             {Number(
                               movie.imdbVotes!.replace(/,/g, "")
                             ).toLocaleString()}{" "}
@@ -186,18 +225,19 @@ const MovieDetails = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 mb-6 text-muted-foreground">
+                {/* Release and quick notes, hidden on mobile, shown on desktop */}
+                <div className="hidden md:flex items-center gap-4 mb-6 text-muted-foreground font-semibold">
                   {[
-                    movie.Released && `Released ${movie.Released}`,
-                    movie.Runtime,
-                    movie.Rated,
+                    isValidField(movie.Released) &&
+                      `Released ${movie.Released}`,
+                    isValidField(movie.Runtime) && movie.Runtime,
+                    isValidField(movie.Rated) && movie.Rated,
                   ]
                     .filter(Boolean)
                     .join(" • ")}
                 </div>
-
                 {isValidArrayField(movie.Genre) && (
-                  <div className="flex flex-wrap gap-2 mb-6">
+                  <div className="flex flex-wrap gap-2 md:mb-6">
                     {movie.Genre!.split(",").map((genre) => (
                       <Badge
                         key={genre}
@@ -210,6 +250,31 @@ const MovieDetails = () => {
                   </div>
                 )}
 
+                {/* Rating moved below genres on mobile */}
+                {imdbRating !== "N/A" && (
+                  <div className="mt-2 mb-2 md:hidden">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-400 text-2xl">★</span>
+                        <span className="text-2xl font-bold">
+                          {imdbRating.split("/")[0]}
+                        </span>
+                        <span className="text-muted-foreground font-semibold">
+                          /10
+                        </span>
+                      </div>
+                      {isValidField(movie.imdbVotes) && (
+                        <div className="ml-1 text-muted-foreground font-semibold text-sm">
+                          {Number(
+                            movie.imdbVotes!.replace(/,/g, "")
+                          ).toLocaleString()}{" "}
+                          votes
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {isValidField(movie.Plot) && (
                   <p className="text-lg mb-8 text-foreground">{movie.Plot}</p>
                 )}
@@ -218,7 +283,9 @@ const MovieDetails = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   {isValidArrayField(movie.Director) && (
                     <div>
-                      <h2 className="text-muted-foreground mb-1">Director</h2>
+                      <h2 className="text-muted-foreground font-semibold mb-1">
+                        Director
+                      </h2>
                       <p>
                         {movie.Director?.split(",")
                           .filter(Boolean)
@@ -229,7 +296,9 @@ const MovieDetails = () => {
                   )}
                   {isValidArrayField(movie.Writer) && (
                     <div>
-                      <h2 className="text-muted-foreground mb-1">Writers</h2>
+                      <h2 className="text-muted-foreground font-semibold mb-1">
+                        Writers
+                      </h2>
                       <p>
                         {movie.Writer?.split(",")
                           .filter(Boolean)
@@ -240,7 +309,9 @@ const MovieDetails = () => {
                   )}
                   {isValidArrayField(movie.Actors) && (
                     <div>
-                      <h2 className="text-muted-foreground mb-1">Stars</h2>
+                      <h2 className="text-muted-foreground font-semibold mb-1">
+                        Stars
+                      </h2>
                       <p>
                         {movie.Actors?.split(",")
                           .filter(Boolean)
@@ -256,7 +327,9 @@ const MovieDetails = () => {
                 <div className="space-y-4">
                   {isValidField(movie.Awards) && (
                     <div>
-                      <h2 className="text-muted-foreground mb-1">Awards</h2>
+                      <h2 className="text-muted-foreground font-semibold mb-1">
+                        Awards
+                      </h2>
                       <p>{movie.Awards}</p>
                     </div>
                   )}
@@ -264,19 +337,23 @@ const MovieDetails = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {isValidField(movie.Country) && (
                       <div>
-                        <h2 className="text-muted-foreground mb-1">Country</h2>
+                        <h2 className="text-muted-foreground font-semibold mb-1">
+                          Country
+                        </h2>
                         <p>{movie.Country}</p>
                       </div>
                     )}
                     {isValidField(movie.Language) && (
                       <div>
-                        <h2 className="text-muted-foreground mb-1">Language</h2>
+                        <h2 className="text-muted-foreground font-semibold mb-1">
+                          Language
+                        </h2>
                         <p>{movie.Language}</p>
                       </div>
                     )}
                     {isValidField(movie.Production) && (
                       <div>
-                        <h2 className="text-muted-foreground mb-1">
+                        <h2 className="text-muted-foreground font-semibold mb-1">
                           Production
                         </h2>
                         <p>{movie.Production}</p>
@@ -284,7 +361,7 @@ const MovieDetails = () => {
                     )}
                     {isValidField(movie.BoxOffice) && (
                       <div>
-                        <h2 className="text-muted-foreground mb-1">
+                        <h2 className="text-muted-foreground font-semibold mb-1">
                           Box Office
                         </h2>
                         <p>{movie.BoxOffice}</p>
@@ -292,7 +369,7 @@ const MovieDetails = () => {
                     )}
                     {isValidField(movie.DVD) && (
                       <div>
-                        <h2 className="text-muted-foreground mb-1">
+                        <h2 className="text-muted-foreground font-semibold mb-1">
                           DVD Release
                         </h2>
                         <p>{movie.DVD}</p>
@@ -300,7 +377,9 @@ const MovieDetails = () => {
                     )}
                     {isValidField(movie.Website) && (
                       <div>
-                        <h2 className="text-muted-foreground mb-1">Website</h2>
+                        <h2 className="text-muted-foreground font-semibold mb-1">
+                          Website
+                        </h2>
                         <a
                           href={movie.Website}
                           target="_blank"
@@ -332,7 +411,7 @@ const MovieDetails = () => {
                             {movie.Metascore}
                           </span>
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-sm text-muted-foreground font-semibold">
                           Metascore
                         </div>
                       </div>
