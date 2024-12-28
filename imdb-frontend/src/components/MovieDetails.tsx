@@ -10,6 +10,7 @@ import {
   isTVSeries,
   isEpisode,
 } from "../utils/movie";
+import { movieCache } from "../utils/cache";
 
 const renderSeasonInfo = (movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
@@ -37,12 +38,33 @@ const MovieDetails = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState<MovieDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isCached, setIsCached] = useState(false);
 
   useEffect(() => {
     const fetchMovie = async () => {
+      if (!id) return;
+
+      setLoading(true);
       try {
-        const data = await getMovieDetails(id!);
+        // Check if data is in cache
+        const cacheKey = `movie-${id}`;
+        const cachedData = movieCache.get<MovieDetailsType>(cacheKey);
+
+        if (cachedData) {
+          setMovie(cachedData);
+          setIsCached(true);
+          setLoading(false);
+
+          return;
+        }
+
+        // If not in cache, fetch from API
+        const data = await getMovieDetails(id);
         setMovie(data);
+        setIsCached(false);
+
+        // Store in cache
+        movieCache.set(cacheKey, data);
       } catch (error) {
         console.error("Error fetching movie:", error);
       } finally {
@@ -80,6 +102,11 @@ const MovieDetails = () => {
             alt={movie.Title}
             className="absolute inset-0 h-full w-full object-cover opacity-30 blur-3xl"
           />
+        )}
+        {isCached && (
+          <p className="text-sm text-gray-500 mb-2">
+            Results loaded from cache
+          </p>
         )}
 
         {/* Content */}

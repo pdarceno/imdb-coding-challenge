@@ -12,6 +12,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { movieCache } from "../utils/cache";
 
 const MovieSearch = () => {
   const [movies, setMovies] = useState<MovieSearchResultType[]>([]);
@@ -20,6 +21,7 @@ const MovieSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isCached, setIsCached] = useState(false);
 
   const moviesPerPage = 10; // OMDB API returns 10 results per page
   const totalPages = Math.ceil(totalResults / moviesPerPage);
@@ -30,6 +32,10 @@ const MovieSearch = () => {
     setSearchQuery(query);
 
     try {
+      const cacheKey = movieCache.createKey(query, page);
+      const cachedExists = movieCache.get(cacheKey) !== null;
+      setIsCached(cachedExists);
+
       const data = await searchMovies(query, page);
       setMovies(data.Search || []);
       setTotalResults(parseInt(data.totalResults) || 0);
@@ -96,6 +102,9 @@ const MovieSearch = () => {
   return (
     <div className="w-full max-w-7xl mx-auto p-6">
       <SearchBar onSearch={(query) => handleSearch(query, 1)} />
+      {isCached && (
+        <p className="text-sm text-gray-500 mb-2">Results loaded from cache</p>
+      )}
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <MovieList movies={movies} isLoading={isLoading} />
 
