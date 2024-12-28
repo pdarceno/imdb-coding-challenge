@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getMovieDetails } from "../services/api";
 import { MovieDetailsType } from "../types/movies";
+import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -23,10 +24,8 @@ const MovieDetails = () => {
     fetchMovie();
   }, [id]);
 
-  if (loading)
-    return (
-      <div className="min-h-screen bg-gray-900 text-white">Loading...</div>
-    );
+  if (loading) return <MovieDetailsSkeleton />;
+
   if (!movie || movie.Response === "False") {
     return (
       <div className="min-h-screen bg-gray-900 text-white p-8">
