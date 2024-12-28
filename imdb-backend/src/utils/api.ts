@@ -1,4 +1,3 @@
-// utils/api.ts
 import axios from "axios";
 import { SearchResponseType, MovieDetailsType } from "../types/movies";
 
@@ -11,9 +10,12 @@ const createOmdbApi = (baseUrl: string, apiKey: string) => {
   });
 
   return {
-    search: (query: string) =>
+    search: (query: string, page: number = 1) =>
       client.get<SearchResponseType>("/", {
-        params: { s: query },
+        params: {
+          s: query,
+          page: page,
+        },
       }),
 
     getById: (id: string) =>

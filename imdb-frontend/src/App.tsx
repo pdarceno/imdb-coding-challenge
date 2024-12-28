@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MovieSearch from "./components/MovieSearch";
 import MovieDetails from "./components/MovieDetails";
 
-function App() {
+const App = () => {
   return (
     <Router>
       <div className="container mx-auto">
@@ -13,6 +13,6 @@ function App() {
       </div>
     </Router>
   );
-}
+};
 
 export default App;

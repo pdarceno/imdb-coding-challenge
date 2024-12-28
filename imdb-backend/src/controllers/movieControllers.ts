@@ -7,15 +7,21 @@ export default function createMovieController(baseUrl: string, apiKey: string) {
   // Search movies endpoint
   const searchMovies: RequestHandler = async (req, res) => {
     try {
-      const { query } = req.query as { query: string };
+      const { query, page } = req.query as { query: string; page?: string };
       if (!query) {
         res.status(400).json({ error: "Search query is required" });
         return;
       }
 
-      const response = await omdbApi.search(query);
+      // Convert page to number, default to 1 if not provided
+      const pageNumber = page ? parseInt(page, 10) : 1;
+      if (isNaN(pageNumber) || pageNumber < 1) {
+        res.status(400).json({ error: "Invalid page number" });
+        return;
+      }
+
+      const response = await omdbApi.search(query, pageNumber);
       res.json(response.data);
-      console.log(response.data);
       return;
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch movies" });
