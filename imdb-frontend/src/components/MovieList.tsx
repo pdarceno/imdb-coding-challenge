@@ -17,7 +17,7 @@ const MovieList = ({ movies, title, isLoading }: MovieListProps) => {
       {title && (
         <h2 className="text-2xl font-bold text-white mb-4 sm:mb-6">{title}</h2>
       )}
-      <div className="flex flex-wrap justify-center gap-3 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {isLoading
           ? skeletonCards.map((_, index) => (
               <MovieCardSkeleton key={`skeleton-${index}`} />

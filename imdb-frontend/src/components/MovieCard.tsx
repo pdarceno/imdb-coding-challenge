@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { MovieSearchResultType } from "../types/movies";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface MovieCardProps {
   movie: MovieSearchResultType;
@@ -8,12 +9,10 @@ interface MovieCardProps {
 
 const MovieCard = ({ movie }: MovieCardProps) => {
   return (
-    <Link to={`/movie/${movie.imdbID}`}>
-      <Card className="w-[160px] sm:w-[193px] bg-card hover:shadow-lg transition-shadow overflow-hidden">
+    <Link to={`/movie/${movie.imdbID}`} className="block w-full sm:w-auto">
+      <Card className="h-full bg-card hover:shadow-lg transition-shadow overflow-hidden">
         <CardHeader className="p-0">
-          <div className="relative w-full h-60 sm:h-72">
-            {" "}
-            {/* Fixed height container */}
+          <AspectRatio ratio={158 / 240}>
             <img
               src={
                 movie.Poster !== "N/A"
@@ -21,12 +20,12 @@ const MovieCard = ({ movie }: MovieCardProps) => {
                   : "/api/placeholder/193/287"
               }
               alt={movie.Title}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="object-cover w-full h-full"
             />
-          </div>
+          </AspectRatio>
         </CardHeader>
 
-        <CardContent className="p-3 sm:p-4 space-y-1 flex-shrink-0 h-[90px] sm:h-[100px]">
+        <CardContent className="p-3 sm:p-4 space-y-1">
           <h3 className="text-sm sm:text-base text-primary font-medium line-clamp-2">
             {movie.Title}
           </h3>
