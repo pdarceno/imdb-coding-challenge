@@ -3,11 +3,11 @@ import { Search } from "lucide-react";
 import { SEARCH_CONSTANTS } from "@/constants";
 import ThemeToggle from "./ThemeToggle";
 
-interface SearchBarProps {
+interface HeaderContentProps {
   onSearch: (query: string) => void;
 }
 
-const SearchBar = ({ onSearch }: SearchBarProps) => {
+const HeaderContent = ({ onSearch }: HeaderContentProps) => {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const lastKeystrokeTime = useRef<number>(0);
@@ -144,4 +144,4 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   );
 };
 
-export default SearchBar;
+export default HeaderContent;
