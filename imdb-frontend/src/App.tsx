@@ -8,9 +8,6 @@ import { ThemeProvider } from "./contexts/ThemeProvider";
 import { FavoritesProvider } from "./contexts/FavoritesProvider";
 import { Toaster } from "@/components/ui/toaster";
 
-// Add dark class
-document.documentElement.classList.add("dark");
-
 const App = () => {
   useInvalidateCache(30); // Clear cache every 30 minutes
   return (

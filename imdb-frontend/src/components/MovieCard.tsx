@@ -11,7 +11,7 @@ interface MovieCardProps {
 
 const MovieCard = ({ movie }: MovieCardProps) => {
   const { favorites, toggleFavorite, loading } = useFavorites();
-  const isFavorited = favorites.includes(movie.imdbID);
+  const isFavorited = favorites.some((fav) => fav.id === movie.imdbID);
 
   return (
     <Card className="h-full bg-card hover:shadow-lg transition-shadow overflow-hidden relative">
@@ -36,7 +36,7 @@ const MovieCard = ({ movie }: MovieCardProps) => {
                 onClick={(event) => {
                   event.preventDefault();
                   if (!loading[movie.imdbID]) {
-                    toggleFavorite(movie.imdbID);
+                    toggleFavorite(movie.imdbID, movie.Title);
                   }
                 }}
                 aria-label={

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { SEARCH_CONSTANTS } from "@/constants";
 import ThemeToggle from "./ThemeToggle";
 
@@ -113,6 +113,12 @@ const HeaderContent = ({ onSearch }: HeaderContentProps) => {
     }
   };
 
+  const handleClear = () => {
+    setQuery("");
+    lastSearchedQuery.current = "";
+    onSearch(""); // Optionally trigger a search with empty string
+  };
+
   return (
     <div className="flex items-center w-full max-w-screen-xl mx-auto p-4 sm:p-6">
       <div className="flex items-center mr-4">
@@ -134,7 +140,14 @@ const HeaderContent = ({ onSearch }: HeaderContentProps) => {
             onChange={handleChange}
             className="w-full p-3 bg-transparent text-primary focus:outline-none"
           />
-          <Search className="h-5 w-5 m-3 text-gray-400" />
+          {query ? (
+            <X
+              className="h-8 w-8 mx-3 my-1 text-gray-400 cursor-pointer hover:text-gray-600"
+              onClick={handleClear}
+            />
+          ) : (
+            <Search className="h-6 w-6 mx-3 my-2 text-gray-400" />
+          )}
         </div>
         <div className="flex items-center ml-4">
           <ThemeToggle />

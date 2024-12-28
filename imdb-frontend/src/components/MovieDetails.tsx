@@ -46,7 +46,7 @@ const MovieDetails = () => {
     toggleFavorite,
     loading: loadingFavorite,
   } = useFavorites();
-  const isFavorited = favorites.includes(id!);
+  const isFavorited = favorites.some((fav) => fav.id === id!);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -132,7 +132,7 @@ const MovieDetails = () => {
                   onClick={(event) => {
                     event.preventDefault();
                     if (!loadingFavorite[movie.imdbID]) {
-                      toggleFavorite(movie.imdbID);
+                      toggleFavorite(movie.imdbID, movie.Title);
                     }
                   }}
                   aria-label={
