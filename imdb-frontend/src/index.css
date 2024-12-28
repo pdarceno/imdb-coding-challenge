@@ -64,3 +64,27 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer base {
+  ::-webkit-scrollbar {
+    @apply w-2; /* width of vertical scrollbar */
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100; /* scrollbar track */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full; /* scrollbar handle */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400; /* scrollbar handle on hover */
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f1f5f9; /* thumb and track color (using Tailwind gray colors) */
+  }
+}

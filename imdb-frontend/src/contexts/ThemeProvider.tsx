@@ -31,7 +31,7 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: FC<ThemeProviderProps> = ({
   children,
-  defaultTheme = "light",
+  defaultTheme = "dark",
 }) => {
   const [theme, setTheme] = useState<Theme>(() => {
     // Check localStorage first, then defaultTheme
