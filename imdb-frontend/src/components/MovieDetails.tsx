@@ -3,6 +3,35 @@ import { useParams } from "react-router-dom";
 import { getMovieDetails } from "../services/api";
 import { MovieDetailsType } from "../types/movies";
 import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
+import { Badge } from "./ui/badge";
+import {
+  isValidField,
+  isValidArrayField,
+  isTVSeries,
+  isEpisode,
+} from "../utils/movie";
+
+const renderSeasonInfo = (movie: MovieDetailsType) => {
+  if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
+    return (
+      <div>
+        <h2 className="text-gray-400 mb-1">Seasons</h2>
+        <p>{movie.totalSeasons} Seasons</p>
+      </div>
+    );
+  }
+  if (isEpisode(movie)) {
+    return (
+      <div>
+        <h2 className="text-gray-400 mb-1">Episode Info</h2>
+        <p>
+          Season {movie.Season}, Episode {movie.Episode}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -45,10 +74,10 @@ const MovieDetails = () => {
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Backdrop image with overlay */}
       <div className="relative h-full">
-        {movie.Poster && movie.Poster !== "N/A" && (
+        {isValidField(movie.Poster) && (
           <img
             src={movie.Poster}
-            alt="background image"
+            alt={movie.Title}
             className="absolute inset-0 h-full w-full object-cover opacity-30 blur-3xl"
           />
         )}
@@ -59,7 +88,7 @@ const MovieDetails = () => {
             <div className="flex flex-col md:flex-row gap-8">
               {/* Poster */}
               <div className="md:w-1/4">
-                {movie.Poster && movie.Poster !== "N/A" ? (
+                {isValidField(movie.Poster) ? (
                   <img
                     src={movie.Poster}
                     alt={movie.Title}
@@ -75,8 +104,10 @@ const MovieDetails = () => {
               {/* Details */}
               <div className="md:w-3/4">
                 <div className="flex justify-between items-start mb-4">
+                  {/* Dont need validating */}
                   <h1 className="text-4xl font-bold">{movie.Title}</h1>
                   <div className="flex items-center gap-8">
+                    {/* IMDB Rating */}
                     {imdbRating !== "N/A" && (
                       <div>
                         <div className="flex items-center gap-2">
@@ -86,10 +117,10 @@ const MovieDetails = () => {
                           </span>
                           <span className="text-gray-400">/10</span>
                         </div>
-                        {movie.imdbVotes && movie.imdbVotes !== "N/A" && (
+                        {isValidField(movie.imdbVotes) && (
                           <div className="text-gray-400 text-sm text-center">
                             {Number(
-                              movie.imdbVotes.replace(/,/g, "")
+                              movie.imdbVotes!.replace(/,/g, "")
                             ).toLocaleString()}{" "}
                             votes
                           </div>
@@ -109,46 +140,64 @@ const MovieDetails = () => {
                     .join(" • ")}
                 </div>
 
-                {movie.Genre && movie.Genre !== "N/A" && (
+                {isValidArrayField(movie.Genre) && (
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {movie.Genre.split(",").map((genre) => (
-                      <span
+                    {movie.Genre!.split(",").map((genre) => (
+                      <Badge
                         key={genre}
-                        className="px-3 py-1 bg-gray-800 rounded-full text-sm"
+                        className="px-3 py-1 rounded-full text-sm text-white"
                       >
                         {genre.trim()}
-                      </span>
+                      </Badge>
                     ))}
                   </div>
                 )}
 
-                {movie.Plot && <p className="text-lg mb-8">{movie.Plot}</p>}
+                {isValidField(movie.Plot) && (
+                  <p className="text-lg mb-8">{movie.Plot}</p>
+                )}
 
                 {/* Main Credits */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  {movie.Director && movie.Director !== "N/A" && (
+                  {isValidArrayField(movie.Director) && (
                     <div>
                       <h2 className="text-gray-400 mb-1">Director</h2>
-                      <p>{movie.Director}</p>
+                      <p>
+                        {movie.Director?.split(",")
+                          .filter(Boolean)
+                          .map((director) => director.trim())
+                          .join(" · ")}
+                      </p>
                     </div>
                   )}
-                  {movie.Writer && movie.Writer !== "N/A" && (
+                  {isValidArrayField(movie.Writer) && (
                     <div>
                       <h2 className="text-gray-400 mb-1">Writers</h2>
-                      <p>{movie.Writer}</p>
+                      <p>
+                        {movie.Writer?.split(",")
+                          .filter(Boolean)
+                          .map((writer) => writer.trim())
+                          .join(" · ")}
+                      </p>
                     </div>
                   )}
-                  {movie.Actors && movie.Actors !== "N/A" && (
+                  {isValidArrayField(movie.Actors) && (
                     <div>
                       <h2 className="text-gray-400 mb-1">Stars</h2>
-                      <p>{movie.Actors}</p>
+                      <p>
+                        {movie.Actors?.split(",")
+                          .filter(Boolean)
+                          .map((actor) => actor.trim())
+                          .join(" · ")}
+                      </p>
                     </div>
                   )}
+                  {renderSeasonInfo(movie)}
                 </div>
 
                 {/* Additional Details */}
                 <div className="space-y-4">
-                  {movie.Awards && movie.Awards !== "N/A" && (
+                  {isValidField(movie.Awards) && (
                     <div>
                       <h2 className="text-gray-400 mb-1">Awards</h2>
                       <p>{movie.Awards}</p>
@@ -156,37 +205,37 @@ const MovieDetails = () => {
                   )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {movie.Country && movie.Country !== "N/A" && (
+                    {isValidField(movie.Country) && (
                       <div>
                         <h2 className="text-gray-400 mb-1">Country</h2>
                         <p>{movie.Country}</p>
                       </div>
                     )}
-                    {movie.Language && movie.Language !== "N/A" && (
+                    {isValidField(movie.Language) && (
                       <div>
                         <h2 className="text-gray-400 mb-1">Language</h2>
                         <p>{movie.Language}</p>
                       </div>
                     )}
-                    {movie.Production && movie.Production !== "N/A" && (
+                    {isValidField(movie.Production) && (
                       <div>
                         <h2 className="text-gray-400 mb-1">Production</h2>
                         <p>{movie.Production}</p>
                       </div>
                     )}
-                    {movie.BoxOffice && movie.BoxOffice !== "N/A" && (
+                    {isValidField(movie.BoxOffice) && (
                       <div>
                         <h2 className="text-gray-400 mb-1">Box Office</h2>
                         <p>{movie.BoxOffice}</p>
                       </div>
                     )}
-                    {movie.DVD && movie.DVD !== "N/A" && (
+                    {isValidField(movie.DVD) && (
                       <div>
                         <h2 className="text-gray-400 mb-1">DVD Release</h2>
                         <p>{movie.DVD}</p>
                       </div>
                     )}
-                    {movie.Website && movie.Website !== "N/A" && (
+                    {isValidField(movie.Website) && (
                       <div>
                         <h2 className="text-gray-400 mb-1">Website</h2>
                         <a
@@ -203,7 +252,7 @@ const MovieDetails = () => {
                 </div>
 
                 {/* Other Reviews Section */}
-                {movie.Metascore && movie.Metascore !== "N/A" && (
+                {isValidField(movie.Metascore) && (
                   <div className="pt-8">
                     <div className="flex items-start gap-12">
                       <div>

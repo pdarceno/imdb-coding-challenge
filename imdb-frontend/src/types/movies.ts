@@ -1,8 +1,10 @@
+export type MediaType = "movie" | "series" | "episode"; // made more specific
+
 export interface MovieSearchResultType {
   Title: string; // Always present in search results
   Year: string; // Always present in search results
   imdbID: string; // Always present, used as unique identifier
-  Type: string; // Always present (movie, series, etc.)
+  Type: MediaType;
   Poster: string | "N/A"; // OMDB returns "N/A" if no poster
 }
 
@@ -18,7 +20,7 @@ export interface MovieDetailsType {
   Title: string;
   Year: string;
   imdbID: string;
-  Type: string;
+  Type: MediaType;
   Response: "True" | "False";
   Poster: string | "N/A";
 
@@ -46,4 +48,10 @@ export interface MovieDetailsType {
   Production?: string;
   Website?: string;
   Error?: string; // Present only when Response is "False"
+
+  // TV Series specific fields
+  totalSeasons?: string;
+  Season?: string; // For episodes
+  Episode?: string; // For episodes
+  seriesID?: string; // For episodes
 }
