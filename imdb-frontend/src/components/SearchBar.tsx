@@ -3,13 +3,9 @@ import { SEARCH_CONSTANTS } from "@/constants";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
-  isLoading?: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
-  onSearch,
-  isLoading = false,
-}) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const lastKeystrokeTime = useRef<number>(0);
