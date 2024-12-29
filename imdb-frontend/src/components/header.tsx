@@ -15,7 +15,7 @@ const Header = () => {
 
   return (
     <header className="w-full border-b border-border/40 bg-card backdrop-blur">
-      <div className="mx-auto flex h-16 items-center">
+      <div className="mx-auto py-6 flex h-16 items-center">
         <HeaderContent onSearch={handleSearch} />
       </div>
     </header>

@@ -145,7 +145,7 @@ const HeaderContent = ({ onSearch }: HeaderContentProps) => {
         onSubmit={handleSubmit}
         className="flex-1 flex items-center overflow-hidden"
       >
-        <div className="flex items-center flex-grow bg-input">
+        <div className="flex items-center flex-grow bg-input  rounded-lg border">
           <input
             type="text"
             placeholder="Search IMDb"
