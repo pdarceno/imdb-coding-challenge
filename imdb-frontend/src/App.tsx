@@ -8,6 +8,7 @@ import Footer from "./components/footer";
 import { ThemeProvider } from "@/contexts/theme-provider";
 import { FavoritesProvider } from "@/contexts/favorites-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { ScrollToTop } from "./utils/scroll-to-top";
 
 const App = () => {
   useInvalidateCache(30); // Clear cache every 30 minutes
@@ -17,6 +18,7 @@ const App = () => {
       <FavoritesProvider>
         <ThemeProvider>
           <Header />
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<MovieSearch />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
