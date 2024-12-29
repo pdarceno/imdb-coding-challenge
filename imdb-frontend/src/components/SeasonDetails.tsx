@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { getSeasonDetails } from "../services/api";
 import { SeasonDetailsType } from "../types/movies";
 import SeasonDetailsSkeleton from "./SeasonDetailsSkeleton";
+import MovieBreadcrumbs from "./MovieBreadcrumbs";
 
 const SeasonDetails = () => {
   const { id, seasonNumber } = useParams();
@@ -40,15 +41,11 @@ const SeasonDetails = () => {
   return (
     <div className="min-h-[calc(100vh-268.85px)] w-full bg-background text-foreground p-8">
       <div className="max-w-screen-xl mx-auto">
-        <div className="mb-6">
-          <Link
-            to={`/movie/${id}`}
-            className="text-primary hover:text-primary/80"
-          >
-            ← Back to Show
-          </Link>
-        </div>
-
+        <MovieBreadcrumbs
+          title={seasonData.Title}
+          id={id!}
+          seasonNumber={seasonNumber}
+        />
         <h1 className="text-3xl font-bold mb-6">
           {seasonData.Title} - Season {seasonNumber}
         </h1>

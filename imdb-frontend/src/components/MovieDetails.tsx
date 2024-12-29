@@ -13,6 +13,7 @@ import {
 import { movieCache } from "../utils/cache";
 import { useFavorites } from "@/contexts/FavoritesProvider";
 import { Plus, X } from "lucide-react";
+import MovieBreadcrumbs from "./MovieBreadcrumbs";
 
 const renderSeasonInfo = (urlID: string, movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
@@ -71,6 +72,7 @@ const MovieDetails = () => {
     loading: loadingFavorite,
   } = useFavorites();
   const isFavorited = favorites.some((fav) => fav.id === id!);
+  const [seriesTitle, setSeriesTitle] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,8 +83,23 @@ const MovieDetails = () => {
         let data;
         let cacheKey;
 
-        // If seasonNumber and episodeNumber are present, fetch episode details
+        // If we're looking at an episode, first get the series title
         if (seasonNumber && episodeNumber) {
+          // Try to get series title from cache first
+          const seriesCacheKey = `movie-${id}`;
+          const cachedSeriesData =
+            movieCache.get<MovieDetailsType>(seriesCacheKey);
+
+          if (cachedSeriesData) {
+            setSeriesTitle(cachedSeriesData.Title);
+          } else {
+            // If not in cache, fetch series details
+            const seriesData = await getMovieDetails(id);
+            setSeriesTitle(seriesData.Title);
+            movieCache.set(seriesCacheKey, seriesData);
+          }
+
+          // Now get episode details
           cacheKey = `episode-${id}-${seasonNumber}-${episodeNumber}`;
           const cachedData = movieCache.get<MovieDetailsType>(cacheKey);
 
@@ -105,12 +122,14 @@ const MovieDetails = () => {
 
           if (cachedData) {
             setMovie(cachedData);
+            setSeriesTitle(cachedData.Title);
             setIsCached(true);
             setLoading(false);
             return;
           }
 
           data = await getMovieDetails(id);
+          setSeriesTitle(data.Title);
         }
 
         setMovie(data);
@@ -125,6 +144,7 @@ const MovieDetails = () => {
 
     fetchData();
   }, [id, seasonNumber, episodeNumber]);
+
   if (loading) return <MovieDetailsSkeleton />;
 
   if (!movie || movie.Response === "False") {
@@ -160,6 +180,15 @@ const MovieDetails = () => {
         {/* Content */}
         <div className="relative max-w-screen-xl mx-auto py-4 sm:py-6">
           <div className="w-full px-5">
+            {/* Use seriesTitle for breadcrumbs */}
+            <MovieBreadcrumbs
+              title={seriesTitle}
+              id={id!}
+              seasonNumber={seasonNumber}
+              episodeNumber={episodeNumber}
+              currentTitle={movie?.Title} // Pass current episode title if needed
+              className="md:pb-2"
+            />
             {/* Title moved to top on mobile */}
             <h1 className="text-4xl font-bold text-foreground mb-1 md:hidden">
               {movie.Title}
