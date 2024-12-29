@@ -6,7 +6,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "./ui/breadcrumb";
-import { cn } from "@/lib/utils";
 
 const MovieBreadcrumbs = ({
   title, // This is now always the series title
