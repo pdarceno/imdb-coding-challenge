@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Discover from "./Discover";
-import Favorites from "./Favorites";
+import Discover from "./discover";
+import Favorites from "./favorites";
 import { useState } from "react";
 
 const Home = () => {
