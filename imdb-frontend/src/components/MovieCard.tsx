@@ -11,7 +11,7 @@ interface MovieCardProps {
 
 const MovieCard = ({ movie }: MovieCardProps) => {
   const { favorites, toggleFavorite, loading } = useFavorites();
-  const isFavorited = favorites.some((fav) => fav.id === movie.imdbID);
+  const isFavorited = favorites.some((fav) => fav.parentId === movie.imdbID);
 
   return (
     <Card className="h-full bg-card hover:shadow-lg transition-shadow overflow-hidden relative">
@@ -52,6 +52,7 @@ const MovieCard = ({ movie }: MovieCardProps) => {
                 onClick={(event) => {
                   event.preventDefault();
                   if (!loading[movie.imdbID]) {
+                    // this can be imdbId only. cards do not display episodes individually
                     toggleFavorite(movie.imdbID, movie.Title);
                   }
                 }}

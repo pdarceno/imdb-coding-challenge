@@ -15,7 +15,7 @@ import { useFavorites } from "@/contexts/FavoritesProvider";
 import { Plus, X } from "lucide-react";
 import MovieBreadcrumbs from "./MovieBreadcrumbs";
 
-const renderSeasonInfo = (urlID: string, movie: MovieDetailsType) => {
+const renderSeasonInfo = (parentId: string, movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
     const totalSeasons = parseInt(movie.totalSeasons!);
     return (
@@ -26,7 +26,7 @@ const renderSeasonInfo = (urlID: string, movie: MovieDetailsType) => {
             (seasonNum, index) => (
               <span key={seasonNum}>
                 <Link
-                  to={`/movie/${movie.imdbID}/season/${seasonNum}`}
+                  to={`/movie/${parentId}/season/${seasonNum}`}
                   className="hover:text-primary transition-colors"
                 >
                   Season {seasonNum}
@@ -47,7 +47,7 @@ const renderSeasonInfo = (urlID: string, movie: MovieDetailsType) => {
         <h2 className="text-muted-foreground font-semibold mb-1">Other Info</h2>
         <p>
           <Link
-            to={`/movie/${urlID}/season/${movie.Season}`}
+            to={`/movie/${parentId}/season/${movie.Season}`}
             className="hover:text-primary transition-colors"
           >
             Season {movie.Season}
@@ -71,7 +71,7 @@ const MovieDetails = () => {
     toggleFavorite,
     loading: loadingFavorite,
   } = useFavorites();
-  const isFavorited = favorites.some((fav) => fav.id === id!);
+  const isFavorited = favorites.some((fav) => fav.parentId === id!);
   const [seriesTitle, setSeriesTitle] = useState<string>("");
 
   useEffect(() => {
@@ -237,7 +237,13 @@ const MovieDetails = () => {
                   onClick={(event) => {
                     event.preventDefault();
                     if (!loadingFavorite[movie.imdbID]) {
-                      toggleFavorite(movie.imdbID, movie.Title);
+                      toggleFavorite(
+                        id!,
+                        movie.Title,
+                        seasonNumber,
+                        movie.imdbID,
+                        episodeNumber
+                      );
                     }
                   }}
                   aria-label={

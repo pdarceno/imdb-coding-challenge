@@ -65,7 +65,7 @@ const MainMenu = () => {
                       {suggestedMovies.map((movie) => (
                         <ClickableBadge
                           key={movie.id}
-                          id={movie.id}
+                          parentId={movie.id}
                           title={movie.title}
                         />
                       ))}
@@ -94,9 +94,12 @@ const MainMenu = () => {
                       <div className="flex flex-wrap gap-2">
                         {topFavorites.map((favorite) => (
                           <ClickableBadge
-                            key={favorite.id}
-                            id={favorite.id}
+                            key={`${favorite.parentId}-${favorite.episodeId}`}
+                            parentId={favorite.parentId}
                             title={favorite.title}
+                            seasonNumber={favorite.seasonNumber}
+                            episodeId={favorite.episodeId}
+                            episodeNumber={favorite.episodeNumber}
                           />
                         ))}
                       </div>
