@@ -20,23 +20,23 @@ const renderSeasonInfo = (parentId: string, movie: MovieDetailsType) => {
     return (
       <div>
         <h2 className="text-muted-foreground font-semibold mb-1">Seasons</h2>
-        <p>
+        <div className="flex flex-wrap gap-2 items-center">
           {Array.from({ length: totalSeasons }, (_, i) => i + 1).map(
             (seasonNum, index) => (
-              <span key={seasonNum}>
+              <span key={seasonNum} className="inline-flex items-center">
                 <Link
                   to={`/movie/${parentId}/season/${seasonNum}`}
-                  className="hover:text-primary transition-colors"
+                  className="text-blue-500 hover:text-blue-700 transition-colors whitespace-nowrap"
                 >
                   Season {seasonNum}
                 </Link>
                 {index < totalSeasons - 1 && (
-                  <span className="mx-2 text-muted-foreground">·</span>
+                  <span className="text-muted-foreground ml-2">·</span>
                 )}
               </span>
             )
           )}
-        </p>
+        </div>
       </div>
     );
   }
@@ -44,14 +44,14 @@ const renderSeasonInfo = (parentId: string, movie: MovieDetailsType) => {
     return (
       <div>
         <h2 className="text-muted-foreground font-semibold mb-1">Other Info</h2>
-        <p>
+        <p className="flex items-center gap-2">
           <Link
             to={`/movie/${parentId}/season/${movie.Season}`}
-            className="hover:text-primary transition-colors"
+            className="text-blue-500 hover:text-blue-700 transition-colors whitespace-nowrap"
           >
             Season {movie.Season}
           </Link>
-          <span className="mx-2 text-muted-foreground">·</span>
+          <span className="text-muted-foreground">·</span>
           Episode {movie.Episode}
         </p>
       </div>
