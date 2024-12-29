@@ -1,4 +1,4 @@
-import { useTheme } from "@/contexts/ThemeProvider";
+import { useTheme } from "@/contexts/theme-provider";
 import { Switch } from "@/components/ui/switch";
 import { Sun, Moon } from "lucide-react";
 

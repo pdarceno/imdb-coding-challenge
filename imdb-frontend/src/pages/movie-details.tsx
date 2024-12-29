@@ -11,7 +11,7 @@ import {
   isEpisode,
 } from "../utils/movie";
 import { movieCache } from "../utils/cache";
-import { useFavorites } from "@/contexts/FavoritesProvider";
+import { useFavorites } from "@/contexts/favorites-provider";
 import { Plus, X } from "lucide-react";
 import MovieBreadcrumbs from "../components/movie-breadcrumbs";
 

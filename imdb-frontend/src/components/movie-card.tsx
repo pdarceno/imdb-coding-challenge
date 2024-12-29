@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { MovieSearchResultType } from "../types/movies";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { useFavorites } from "@/contexts/FavoritesProvider";
+import { useFavorites } from "@/contexts/favorites-provider";
 import { X, Plus } from "lucide-react";
 
 interface MovieCardProps {
