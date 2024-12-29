@@ -9,7 +9,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { FavoriteMovie } from "@/types/favorites";
 import { isFavoritedFunction } from "@/utils/favorite";
-import { mockApiCall } from "@/services/api";
+import { getFavorites, mockApiCall } from "@/services/api";
 
 // Define context properties
 interface FavoritesContextProps {
@@ -42,10 +42,19 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const { toast } = useToast();
 
-  // Save favorites to localStorage whenever they change
+  // Load initial favorites from API
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
+    const loadFavorites = async () => {
+      try {
+        const data = await getFavorites();
+        setFavorites(data);
+      } catch (error) {
+        console.error("Error loading favorites:", error);
+      }
+    };
+
+    loadFavorites();
+  }, []);
 
   const toggleFavorite = useCallback(
     async (

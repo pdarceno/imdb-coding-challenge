@@ -1,3 +1,4 @@
+import BadgeListSkeleton from "./badge-list-skeleton";
 import ClickableBadge from "@/components/ui/clickable-badge";
 
 interface BadgeListProps {
@@ -8,10 +9,14 @@ interface BadgeListProps {
     episodeId?: string;
     episodeNumber?: string;
   }>;
-  className?: string;
+  isLoading?: boolean;
 }
 
-const BadgeList = ({ items }: BadgeListProps) => {
+const BadgeList = ({ items, isLoading }: BadgeListProps) => {
+  if (isLoading) {
+    return <BadgeListSkeleton />;
+  }
+
   return (
     <>
       {items.map((item) => (
