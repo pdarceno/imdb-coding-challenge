@@ -12,7 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useFavorites } from "@/contexts/FavoritesProvider";
+import { useFavorites } from "@/contexts/favorites-provider";
 import ClickableBadge from "@/components/ui/clickable-badge";
 import { suggestedMovies } from "@/constants";
 import ThemeToggle from "./theme-toggle";
