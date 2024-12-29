@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getMovieDetails } from "../services/api";
+import { getEpisodeDetails, getMovieDetails } from "../services/api";
 import { MovieDetailsType } from "../types/movies";
 import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
 import { Badge } from "./ui/badge";
@@ -14,7 +14,7 @@ import { movieCache } from "../utils/cache";
 import { useFavorites } from "@/contexts/FavoritesProvider";
 import { Plus, X } from "lucide-react";
 
-const renderSeasonInfo = (movie: MovieDetailsType) => {
+const renderSeasonInfo = (urlID: string, movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
     const totalSeasons = parseInt(movie.totalSeasons!);
     return (
@@ -25,7 +25,7 @@ const renderSeasonInfo = (movie: MovieDetailsType) => {
             (seasonNum, index) => (
               <span key={seasonNum}>
                 <Link
-                  to={`/movies/${movie.imdbID}/season/${seasonNum}`}
+                  to={`/movie/${movie.imdbID}/season/${seasonNum}`}
                   className="hover:text-primary transition-colors"
                 >
                   Season {seasonNum}
@@ -43,17 +43,15 @@ const renderSeasonInfo = (movie: MovieDetailsType) => {
   if (isEpisode(movie)) {
     return (
       <div>
-        <h2 className="text-muted-foreground font-semibold mb-1">
-          Episode Info
-        </h2>
+        <h2 className="text-muted-foreground font-semibold mb-1">Other Info</h2>
         <p>
           <Link
-            to={`/movies/${movie.imdbID}/season/${movie.Season}`}
+            to={`/movie/${urlID}/season/${movie.Season}`}
             className="hover:text-primary transition-colors"
           >
             Season {movie.Season}
           </Link>
-          <span className="mx-2">·</span>
+          <span className="mx-2 text-muted-foreground">·</span>
           Episode {movie.Episode}
         </p>
       </div>
@@ -63,7 +61,7 @@ const renderSeasonInfo = (movie: MovieDetailsType) => {
 };
 
 const MovieDetails = () => {
-  const { id } = useParams();
+  const { id, seasonNumber, episodeNumber } = useParams();
   const [movie, setMovie] = useState<MovieDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [isCached, setIsCached] = useState(false);
@@ -75,40 +73,58 @@ const MovieDetails = () => {
   const isFavorited = favorites.some((fav) => fav.id === id!);
 
   useEffect(() => {
-    const fetchMovie = async () => {
+    const fetchData = async () => {
       if (!id) return;
 
       setLoading(true);
       try {
-        // Check if data is in cache
-        const cacheKey = `movie-${id}`;
-        const cachedData = movieCache.get<MovieDetailsType>(cacheKey);
+        let data;
+        let cacheKey;
 
-        if (cachedData) {
-          setMovie(cachedData);
-          setIsCached(true);
-          setLoading(false);
+        // If seasonNumber and episodeNumber are present, fetch episode details
+        if (seasonNumber && episodeNumber) {
+          cacheKey = `episode-${id}-${seasonNumber}-${episodeNumber}`;
+          const cachedData = movieCache.get<MovieDetailsType>(cacheKey);
 
-          return;
+          if (cachedData) {
+            setMovie(cachedData);
+            setIsCached(true);
+            setLoading(false);
+            return;
+          }
+
+          data = await getEpisodeDetails(
+            id,
+            parseInt(seasonNumber),
+            parseInt(episodeNumber)
+          );
+        } else {
+          // Regular movie/show details fetch
+          cacheKey = `movie-${id}`;
+          const cachedData = movieCache.get<MovieDetailsType>(cacheKey);
+
+          if (cachedData) {
+            setMovie(cachedData);
+            setIsCached(true);
+            setLoading(false);
+            return;
+          }
+
+          data = await getMovieDetails(id);
         }
 
-        // If not in cache, fetch from API
-        const data = await getMovieDetails(id);
         setMovie(data);
         setIsCached(false);
-
-        // Store in cache
-        movieCache.set(cacheKey, data);
+        movieCache.set(cacheKey!, data);
       } catch (error) {
-        console.error("Error fetching movie:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMovie();
-  }, [id]);
-
+    fetchData();
+  }, [id, seasonNumber, episodeNumber]);
   if (loading) return <MovieDetailsSkeleton />;
 
   if (!movie || movie.Response === "False") {
@@ -344,7 +360,7 @@ const MovieDetails = () => {
                       </p>
                     </div>
                   )}
-                  {renderSeasonInfo(movie)}
+                  {renderSeasonInfo(id!, movie)}
                 </div>
 
                 {/* Additional Details */}
