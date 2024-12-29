@@ -4,7 +4,7 @@ import MovieDetails from "@/pages/movie-details";
 import SeasonDetails from "@/pages/season-details";
 import { useInvalidateCache } from "@/hooks/use-invalidate-cache";
 import Header from "@/components/header";
-import Footer from "@/components/footer";
+import Footer from "./components/footer";
 import { ThemeProvider } from "@/contexts/theme-provider";
 import { FavoritesProvider } from "@/contexts/favorites-provider";
 import { Toaster } from "@/components/ui/toaster";
