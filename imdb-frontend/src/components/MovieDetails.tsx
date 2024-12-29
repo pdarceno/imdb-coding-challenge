@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getMovieDetails } from "../services/api";
 import { MovieDetailsType } from "../types/movies";
 import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
@@ -16,10 +16,27 @@ import { Plus, X } from "lucide-react";
 
 const renderSeasonInfo = (movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
+    const totalSeasons = parseInt(movie.totalSeasons!);
     return (
       <div>
         <h2 className="text-muted-foreground font-semibold mb-1">Seasons</h2>
-        <p>{movie.totalSeasons} Seasons</p>
+        <p>
+          {Array.from({ length: totalSeasons }, (_, i) => i + 1).map(
+            (seasonNum, index) => (
+              <span key={seasonNum}>
+                <Link
+                  to={`/movies/${movie.imdbID}/season/${seasonNum}`}
+                  className="hover:text-primary transition-colors"
+                >
+                  Season {seasonNum}
+                </Link>
+                {index < totalSeasons - 1 && (
+                  <span className="mx-2 text-muted-foreground">·</span>
+                )}
+              </span>
+            )
+          )}
+        </p>
       </div>
     );
   }
@@ -30,7 +47,14 @@ const renderSeasonInfo = (movie: MovieDetailsType) => {
           Episode Info
         </h2>
         <p>
-          Season {movie.Season}, Episode {movie.Episode}
+          <Link
+            to={`/movies/${movie.imdbID}/season/${movie.Season}`}
+            className="hover:text-primary transition-colors"
+          >
+            Season {movie.Season}
+          </Link>
+          <span className="mx-2">·</span>
+          Episode {movie.Episode}
         </p>
       </div>
     );
