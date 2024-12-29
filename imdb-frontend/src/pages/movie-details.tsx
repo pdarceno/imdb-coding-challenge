@@ -11,9 +11,8 @@ import {
   isEpisode,
 } from "../utils/movie";
 import { movieCache } from "../utils/cache";
-import { useFavorites } from "@/contexts/favorites-provider";
-import { Plus, X } from "lucide-react";
 import MovieBreadcrumbs from "../components/movie-breadcrumbs";
+import Bookmark from "@/components/ui/bookmark";
 
 const renderSeasonInfo = (parentId: string, movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
@@ -65,12 +64,6 @@ const MovieDetails = () => {
   const { id, seasonNumber, episodeNumber } = useParams();
   const [movie, setMovie] = useState<MovieDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
-  const {
-    favorites,
-    toggleFavorite,
-    loading: loadingFavorite,
-  } = useFavorites();
-  const isFavorited = favorites.some((fav) => fav.parentId === id!);
   const [seriesTitle, setSeriesTitle] = useState<string>("");
 
   useEffect(() => {
@@ -221,41 +214,12 @@ const MovieDetails = () => {
                     </div>
                   )}
                 </div>
-                <div
-                  className={`absolute top-0 left-0 cursor-pointer ${
-                    loadingFavorite[movie.imdbID] ? "opacity-50" : ""
-                  }`}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    if (!loadingFavorite[movie.imdbID]) {
-                      toggleFavorite(
-                        id!,
-                        movie.Title,
-                        seasonNumber,
-                        movie.imdbID,
-                        episodeNumber
-                      );
-                    }
-                  }}
-                  aria-label={
-                    isFavorited ? "Remove from favorites" : "Add to favorites"
-                  }
-                >
-                  <img
-                    src="/bookmark.svg"
-                    alt=""
-                    className="w-12 md:w-8 h-full rounded-tl-lg opacity-70"
-                  />
-
-                  {/* Overlay the Icon */}
-                  <div className="absolute top-3 left-2 text-white">
-                    {isFavorited ? (
-                      <X className="w-8 h-8 md:w-4 md:h-4" />
-                    ) : (
-                      <Plus className="w-8 h-8 md:w-4 md:h-4" />
-                    )}
-                  </div>
-                </div>
+                <Bookmark
+                  id={id!}
+                  title={movie.Title}
+                  episodeId={movie.imdbID}
+                  episodeNumber={episodeNumber}
+                />
               </div>
 
               {/* Details */}

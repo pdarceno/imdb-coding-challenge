@@ -8,6 +8,7 @@ import {
 } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { FavoriteMovie } from "@/types/favorites";
+import { isFavoritedFunction } from "@/utils/favorite";
 
 // Mock API call
 const mockApiCall = async () => {
@@ -69,10 +70,11 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
       try {
         // If it's an episode, check if this specific episode is favorited
         // If it's a parent, check if the parent itself is favorited
-        const isFavorited = favorites.some((movie) =>
-          episodeNumber
-            ? movie.parentId === movieId && movie.episodeId === episodeId
-            : movie.parentId === movieId && !movie.episodeId
+        const isFavorited = isFavoritedFunction(
+          favorites,
+          movieId,
+          episodeNumber,
+          episodeId
         );
 
         // Make API call
