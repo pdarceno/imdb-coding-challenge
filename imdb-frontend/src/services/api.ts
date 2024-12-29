@@ -4,6 +4,9 @@ import { suggestedMovies } from "@/constants";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+console.log("Environment:", import.meta.env);
+console.log("API_URL:", API_URL);
+
 // Mock API call
 export const mockApiCall = async () => {
   return new Promise((resolve) => {
