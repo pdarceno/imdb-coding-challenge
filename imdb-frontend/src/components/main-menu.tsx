@@ -13,13 +13,31 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useFavorites } from "@/contexts/favorites-provider";
-import ClickableBadge from "@/components/ui/clickable-badge";
-import { suggestedMovies } from "@/constants";
 import ThemeToggle from "./theme-toggle";
+import BadgeList from "./ui/badge-list";
+import { FavoriteMovie } from "@/types/favorites";
+import { useEffect, useState } from "react";
+import { getDiscoverSuggestions } from "@/services/api";
 
 const MainMenu = () => {
-  const { favorites } = useFavorites();
-  const topFavorites = [...favorites].reverse().slice(0, 10);
+  const [suggestions, setSuggestions] = useState<FavoriteMovie[]>([]);
+  const [isDiscoverLoading, setIsDiscoverLoading] = useState(true);
+  const { favorites, isLoading } = useFavorites();
+
+  useEffect(() => {
+    const loadSuggestions = async () => {
+      try {
+        const data = await getDiscoverSuggestions();
+        setSuggestions(data as FavoriteMovie[]);
+      } catch (error) {
+        console.error("Error loading suggestions:", error);
+      } finally {
+        setIsDiscoverLoading(false);
+      }
+    };
+
+    loadSuggestions();
+  }, []);
 
   return (
     <Sheet>
@@ -62,13 +80,10 @@ const MainMenu = () => {
                   <div className="flex flex-col gap-2">
                     <p className="text-sm">Start with:</p>
                     <div className="flex flex-wrap gap-2">
-                      {suggestedMovies.map((movie) => (
-                        <ClickableBadge
-                          key={movie.id}
-                          parentId={movie.id}
-                          title={movie.title}
-                        />
-                      ))}
+                      <BadgeList
+                        items={suggestions}
+                        isLoading={isDiscoverLoading}
+                      />
                     </div>
                   </div>
                 </div>
@@ -88,28 +103,12 @@ const MainMenu = () => {
                     Your top favorite movies and shows are listed here. Add more
                     by searching and bookmarking titles you love.
                   </p>
-                  {topFavorites.length > 0 ? (
-                    <div className="flex flex-col gap-2">
-                      <p className="text-sm">Your top favorites:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {topFavorites.map((favorite) => (
-                          <ClickableBadge
-                            key={`${favorite.parentId}-${favorite.episodeId}`}
-                            parentId={favorite.parentId}
-                            title={favorite.title}
-                            seasonNumber={favorite.seasonNumber}
-                            episodeId={favorite.episodeId}
-                            episodeNumber={favorite.episodeNumber}
-                          />
-                        ))}
-                      </div>
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm">Your favorites:</p>
+                    <div className="flex flex-wrap gap-2">
+                      <BadgeList items={favorites} isLoading={isLoading} />
                     </div>
-                  ) : (
-                    <p className="text-sm">
-                      No favorites yet. Start by discovering and bookmarking
-                      titles!
-                    </p>
-                  )}
+                  </div>
                 </div>
               </AccordionContent>
             </AccordionItem>

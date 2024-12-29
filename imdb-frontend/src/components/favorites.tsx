@@ -1,10 +1,10 @@
 import { Star } from "lucide-react";
 import { useFavorites } from "@/contexts/favorites-provider";
-import ClickableBadge from "@/components/ui/clickable-badge";
+import BadgeList from "./ui/badge-list";
 
 const Favorites = () => {
-  const { favorites } = useFavorites();
-  const topFavorites = [...favorites].reverse().slice(0, 10);
+  const { favorites, isLoading } = useFavorites();
+  // const topFavorites = [...favorites].reverse().slice(0, 10);
 
   return (
     <div className="min-h-[calc(100vh-268.85px)] flex flex-col bg-background items-center justify-center text-center px-4">
@@ -15,25 +15,10 @@ const Favorites = () => {
         searching and bookmarking titles you love.
       </p>
       <div className="flex flex-col gap-4 text-primary">
-        {topFavorites.length > 0 ? (
-          <>
-            <p>Your top favorites:</p>
-            <div className="flex flex-wrap justify-center gap-3">
-              {topFavorites.map((favorite) => (
-                <ClickableBadge
-                  key={`${favorite.parentId}-${favorite.episodeId}`}
-                  parentId={favorite.parentId}
-                  title={favorite.title}
-                  seasonNumber={favorite.seasonNumber}
-                  episodeId={favorite.episodeId}
-                  episodeNumber={favorite.episodeNumber}
-                />
-              ))}
-            </div>
-          </>
-        ) : (
-          <p>No favorites yet. Start by discovering and bookmarking titles!</p>
-        )}
+        <p>Your favorites:</p>
+        <div className="flex flex-wrap justify-center gap-3">
+          <BadgeList items={favorites} isLoading={isLoading} />
+        </div>
       </div>
     </div>
   );

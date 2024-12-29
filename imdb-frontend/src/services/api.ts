@@ -1,7 +1,17 @@
 import axios from "axios";
 import { movieCache } from "../utils/cache";
+import { suggestedMovies } from "@/constants";
 
 const API_URL = import.meta.env.VITE_API_URL;
+
+// Mock API call
+export const mockApiCall = async () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ success: true });
+    }, 750);
+  });
+};
 
 export const searchMovies = async (query: string, page: number = 1) => {
   const cacheKey = movieCache.createKey(query, page);
@@ -79,3 +89,46 @@ export const getEpisodeDetails = async (
 };
 
 // These are simmed get requests for suggested movies in discover and stored data for favorites
+export const getFavorites = async () => {
+  const cacheKey = "favorites";
+  const cachedData = movieCache.get(cacheKey);
+
+  if (cachedData) {
+    console.log("Returning cached favorites");
+    return cachedData;
+  }
+
+  // Simulate API delay
+  await mockApiCall();
+
+  // Get data from localStorage
+  const savedFavorites = localStorage.getItem("favorites");
+  const favorites = savedFavorites ? JSON.parse(savedFavorites) : [];
+  const topFavorites = [...favorites].reverse().slice(0, 10);
+
+  // Cache the data
+  movieCache.set(cacheKey, topFavorites);
+
+  return topFavorites;
+};
+
+export const getDiscoverSuggestions = async () => {
+  const cacheKey = "discover-suggestions";
+  const cachedData = movieCache.get(cacheKey);
+
+  if (cachedData) {
+    console.log("Returning cached discover suggestions");
+    return cachedData;
+  }
+
+  // Simulate API delay
+  await mockApiCall();
+
+  // Random shuffle and get 10 items
+  const mockSuggestions = [...suggestedMovies]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 10);
+
+  movieCache.set(cacheKey, mockSuggestions);
+  return mockSuggestions;
+};
