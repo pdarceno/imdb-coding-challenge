@@ -7,6 +7,12 @@ const MovieDetailsSkeleton = () => {
         {/* Content */}
         <div className="relative max-w-screen-xl mx-auto py-4 sm:py-6">
           <div className="w-full px-5">
+            {/* Breadcrumb skeleton */}
+            <div className="flex items-center gap-2 mt-1 mb-1">
+              <Skeleton className="h-4 w-12" /> {/* Home */}
+              <div className="opacity-40">/</div>
+              <Skeleton className="h-4 w-40" /> {/* Series Title */}
+            </div>
             {/* Title skeleton - mobile only */}
             <div className="md:hidden">
               <Skeleton className="h-10 w-3/4 mb-1" />

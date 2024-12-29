@@ -20,10 +20,14 @@ const SeasonDetailsSkeleton = () => {
   return (
     <div className="min-h-[calc(100vh-268.85px)] w-full bg-background text-foreground p-8">
       <div className="max-w-screen-xl mx-auto">
-        <div className="mb-6">
-          <Skeleton className="h-4 w-24" /> {/* Back button */}
+        {/* Breadcrumb skeleton */}
+        <div className="flex items-center gap-2 mb-6">
+          <Skeleton className="h-4 w-12" /> {/* Home */}
+          <div className="opacity-40">/</div>
+          <Skeleton className="h-4 w-40" /> {/* Series Title */}
+          <div className="opacity-40">/</div>
+          <Skeleton className="h-4 w-24" /> {/* Season X */}
         </div>
-
         <div className="mb-6">
           <Skeleton className="h-9 w-96" /> {/* Title */}
         </div>
