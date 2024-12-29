@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getEpisodeDetails, getMovieDetails } from "../services/api";
+import { getEpisodeDetails, getMovieDetails } from "../services/get-api";
 import { MovieDetailsType } from "../types/movies";
 import MovieDetailsSkeleton from "./movie-details-skeleton";
 import { Badge } from "../components/ui/badge";

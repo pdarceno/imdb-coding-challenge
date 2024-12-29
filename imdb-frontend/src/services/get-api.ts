@@ -89,9 +89,6 @@ export const getEpisodeDetails = async (
 };
 
 // These are simmed get requests for suggested movies in discover and stored data for favorites
-// api.ts
-// Add these new endpoints
-
 export const getFavorites = async () => {
   const cacheKey = "favorites";
   const cachedData = movieCache.get(cacheKey);

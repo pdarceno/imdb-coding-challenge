@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getSeasonDetails } from "../services/api";
+import { getSeasonDetails } from "../services/get-api";
 import { SeasonDetailsType } from "../types/movies";
 import SeasonDetailsSkeleton from "./season-details-skeleton";
 import MovieBreadcrumbs from "@/components/movie-breadcrumbs";

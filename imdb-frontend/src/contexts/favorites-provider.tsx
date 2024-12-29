@@ -9,7 +9,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { FavoriteMovie } from "@/types/favorites";
 import { isFavoritedFunction } from "@/utils/favorite";
-import { getFavorites, mockApiCall } from "@/services/api";
+import { getFavorites, mockApiCall } from "@/services/get-api";
 
 // Define context properties
 interface FavoritesContextProps {
