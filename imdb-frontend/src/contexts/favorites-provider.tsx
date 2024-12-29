@@ -62,14 +62,15 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
       episodeId?: string,
       episodeNumber?: string
     ) => {
-      const key = episodeId ? `${movieId}-${episodeId}` : movieId;
+      // Key based on whether it's an episode or not
+      const key = episodeNumber ? `${movieId}-${episodeId}` : movieId;
       setLoading((prev) => ({ ...prev, [key]: true }));
 
       try {
         // If it's an episode, check if this specific episode is favorited
         // If it's a parent, check if the parent itself is favorited
         const isFavorited = favorites.some((movie) =>
-          episodeId
+          episodeNumber
             ? movie.parentId === movieId && movie.episodeId === episodeId
             : movie.parentId === movieId && !movie.episodeId
         );
@@ -81,7 +82,7 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
         setFavorites((prev) =>
           isFavorited
             ? prev.filter((movie) =>
-                episodeId
+                episodeNumber
                   ? !(
                       movie.parentId === movieId &&
                       movie.episodeId === episodeId
@@ -90,13 +91,18 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
               )
             : [
                 ...prev,
-                {
-                  parentId: movieId,
-                  title: movieTitle,
-                  seasonNumber: seasonNumber,
-                  episodeId: episodeId,
-                  episodeNumber: episodeNumber,
-                },
+                episodeNumber
+                  ? {
+                      parentId: movieId,
+                      title: movieTitle,
+                      seasonNumber,
+                      episodeId,
+                      episodeNumber,
+                    }
+                  : {
+                      parentId: movieId,
+                      title: movieTitle,
+                    },
               ]
         );
 
