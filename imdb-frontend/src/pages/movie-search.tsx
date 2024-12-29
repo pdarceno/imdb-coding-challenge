@@ -12,9 +12,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { movieCache } from "../utils/cache";
 import EmptySearch from "../components/empty-search";
-import Home from "@/components/Home";
+import Home from "@/components/home";
 
 const MovieSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,7 +22,6 @@ const MovieSearch = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  const [isCached, setIsCached] = useState(false);
 
   const moviesPerPage = 10;
   const totalPages = Math.ceil(totalResults / moviesPerPage);
@@ -40,10 +38,6 @@ const MovieSearch = () => {
     setIsLoading(true);
 
     try {
-      const cacheKey = movieCache.createKey(query, page);
-      const cachedExists = movieCache.get(cacheKey) !== null;
-      setIsCached(cachedExists);
-
       const data = await searchMovies(query, page);
       setMovies(data.Search || []);
       setTotalResults(parseInt(data.totalResults) || 0);
@@ -112,9 +106,6 @@ const MovieSearch = () => {
 
   return (
     <div className="container mx-auto p-6">
-      {isCached && (
-        <p className="text-sm text-gray-500 mb-2">Results loaded from cache</p>
-      )}
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <MovieList movies={movies} isLoading={isLoading} />
 

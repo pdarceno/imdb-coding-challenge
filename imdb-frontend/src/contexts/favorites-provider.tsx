@@ -62,11 +62,16 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
       episodeId?: string,
       episodeNumber?: string
     ) => {
-      setLoading((prev) => ({ ...prev, [movieId]: true }));
+      const key = episodeId ? `${movieId}-${episodeId}` : movieId;
+      setLoading((prev) => ({ ...prev, [key]: true }));
 
       try {
-        const isFavorited = favorites.some(
-          (movie) => movie.parentId === movieId
+        // If it's an episode, check if this specific episode is favorited
+        // If it's a parent, check if the parent itself is favorited
+        const isFavorited = favorites.some((movie) =>
+          episodeId
+            ? movie.parentId === movieId && movie.episodeId === episodeId
+            : movie.parentId === movieId && !movie.episodeId
         );
 
         // Make API call
@@ -75,7 +80,14 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
         // Update local state
         setFavorites((prev) =>
           isFavorited
-            ? prev.filter((movie) => movie.parentId !== movieId)
+            ? prev.filter((movie) =>
+                episodeId
+                  ? !(
+                      movie.parentId === movieId &&
+                      movie.episodeId === episodeId
+                    )
+                  : !(movie.parentId === movieId && !movie.episodeId)
+              )
             : [
                 ...prev,
                 {
@@ -102,12 +114,11 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
           variant: "destructive",
         });
       } finally {
-        setLoading((prev) => ({ ...prev, [movieId]: false }));
+        setLoading((prev) => ({ ...prev, [key]: false }));
       }
     },
     [favorites, toast]
   );
-
   return (
     <FavoritesContext.Provider value={{ favorites, toggleFavorite, loading }}>
       {children}

@@ -65,7 +65,6 @@ const MovieDetails = () => {
   const { id, seasonNumber, episodeNumber } = useParams();
   const [movie, setMovie] = useState<MovieDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isCached, setIsCached] = useState(false);
   const {
     favorites,
     toggleFavorite,
@@ -105,7 +104,6 @@ const MovieDetails = () => {
 
           if (cachedData) {
             setMovie(cachedData);
-            setIsCached(true);
             setLoading(false);
             return;
           }
@@ -123,7 +121,6 @@ const MovieDetails = () => {
           if (cachedData) {
             setMovie(cachedData);
             setSeriesTitle(cachedData.Title);
-            setIsCached(true);
             setLoading(false);
             return;
           }
@@ -133,7 +130,7 @@ const MovieDetails = () => {
         }
 
         setMovie(data);
-        setIsCached(false);
+        // setIsCached(false);
         movieCache.set(cacheKey!, data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -171,12 +168,6 @@ const MovieDetails = () => {
           alt={movie.Title}
           className="absolute inset-0 h-full w-full object-cover opacity-30 blur-3xl"
         />
-        {isCached && (
-          <p className="text-sm text-muted-foreground font-semibold mb-2">
-            Results loaded from cache
-          </p>
-        )}
-
         {/* Content */}
         <div className="relative max-w-screen-xl mx-auto py-4 sm:py-6">
           <div className="w-full px-5">
