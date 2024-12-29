@@ -21,9 +21,12 @@ const Favorites = () => {
             <div className="flex flex-wrap justify-center gap-3">
               {topFavorites.map((favorite) => (
                 <ClickableBadge
-                  key={favorite.id}
-                  id={favorite.id}
+                  key={`${favorite.parentId}-${favorite.episodeId}`}
+                  parentId={favorite.parentId}
                   title={favorite.title}
+                  seasonNumber={favorite.seasonNumber}
+                  episodeId={favorite.episodeId}
+                  episodeNumber={favorite.episodeNumber}
                 />
               ))}
             </div>

@@ -7,12 +7,7 @@ import {
   useEffect,
 } from "react";
 import { useToast } from "@/hooks/use-toast";
-
-// Define the favorite movie type with id and title
-interface FavoriteMovie {
-  id: string;
-  title: string;
-}
+import { FavoriteMovie } from "@/types/favorites";
 
 // Mock API call
 const mockApiCall = async () => {
@@ -26,7 +21,13 @@ const mockApiCall = async () => {
 // Define context properties
 interface FavoritesContextProps {
   favorites: FavoriteMovie[];
-  toggleFavorite: (movieId: string, movieTitle: string) => Promise<void>;
+  toggleFavorite: (
+    movieId: string,
+    movieTitle: string,
+    seasonNum?: string,
+    episodeId?: string,
+    episodeNumber?: string
+  ) => Promise<void>;
   loading: Record<string, boolean>;
 }
 
@@ -54,11 +55,19 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
   }, [favorites]);
 
   const toggleFavorite = useCallback(
-    async (movieId: string, movieTitle: string) => {
+    async (
+      movieId: string,
+      movieTitle: string,
+      seasonNumber?: string,
+      episodeId?: string,
+      episodeNumber?: string
+    ) => {
       setLoading((prev) => ({ ...prev, [movieId]: true }));
 
       try {
-        const isFavorited = favorites.some((movie) => movie.id === movieId);
+        const isFavorited = favorites.some(
+          (movie) => movie.parentId === movieId
+        );
 
         // Make API call
         await mockApiCall();
@@ -66,8 +75,17 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
         // Update local state
         setFavorites((prev) =>
           isFavorited
-            ? prev.filter((movie) => movie.id !== movieId)
-            : [...prev, { id: movieId, title: movieTitle }]
+            ? prev.filter((movie) => movie.parentId !== movieId)
+            : [
+                ...prev,
+                {
+                  parentId: movieId,
+                  title: movieTitle,
+                  seasonNumber: seasonNumber,
+                  episodeId: episodeId,
+                  episodeNumber: episodeNumber,
+                },
+              ]
         );
 
         // Show toast

@@ -15,7 +15,11 @@ const Discover = () => {
         <p>Start with:</p>
         <div className="flex flex-wrap justify-center gap-3">
           {suggestedMovies.map((movie) => (
-            <ClickableBadge key={movie.id} id={movie.id} title={movie.title} />
+            <ClickableBadge
+              key={movie.id}
+              parentId={movie.id}
+              title={movie.title}
+            />
           ))}
         </div>
       </div>

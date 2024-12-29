@@ -77,3 +77,5 @@ export const getEpisodeDetails = async (
   movieCache.set(cacheKey, response.data);
   return response.data;
 };
+
+// These are simmed get requests for suggested movies in discover and stored data for favorites
