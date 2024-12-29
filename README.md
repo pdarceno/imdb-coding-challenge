@@ -84,6 +84,28 @@ npm install
 npm run dev
 ```
 
+## Environment Variables
+
+### Frontend (.env)
+
+Create a `.env` file in the `imdb-frontend` directory with the following variables:
+
+```env
+VITE_API_URL=http://localhost:3001/api  # Backend API URL
+```
+
+### Backend (.env)
+
+Create a `.env` file in the `imdb-backend` directory with the following variables:
+
+```env
+OMDB_API_KEY=d1467d11                 # OMDB API Key
+PORT=3001                             # Server port
+OMDB_BASE_URL=http://www.omdbapi.com  # OMDB Base URL
+```
+
+Make sure to never commit your `.env` files to version control. Both directories include `.env` in their respective `.gitignore` files.
+
 ## Development Journey and Technical Decisions
 
 ### 1. Pagination Implementation
