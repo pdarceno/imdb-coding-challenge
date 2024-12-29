@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { searchMovies } from "../services/api";
 import { MovieSearchResultType } from "../types/movies";
-import MovieList from "./MovieList";
+import MovieList from "../components/movie-list";
 import {
   Pagination,
   PaginationContent,
@@ -13,8 +13,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { movieCache } from "../utils/cache";
-import EmptySearch from "./EmptySearch";
-import Home from "./Home";
+import EmptySearch from "../components/empty-search";
+import Home from "@/components/Home";
 
 const MovieSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();

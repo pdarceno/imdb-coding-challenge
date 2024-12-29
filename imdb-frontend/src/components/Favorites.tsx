@@ -1,6 +1,6 @@
 import { Star } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesProvider";
-import ClickableBadge from "@/utils/ClickableBadge";
+import ClickableBadge from "@/components/ui/clickable-badge";
 
 const Favorites = () => {
   const { favorites } = useFavorites();

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getEpisodeDetails, getMovieDetails } from "../services/api";
 import { MovieDetailsType } from "../types/movies";
-import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
-import { Badge } from "./ui/badge";
+import MovieDetailsSkeleton from "./movie-details-skeleton";
+import { Badge } from "../components/ui/badge";
 import {
   isValidField,
   isValidArrayField,
@@ -13,7 +13,7 @@ import {
 import { movieCache } from "../utils/cache";
 import { useFavorites } from "@/contexts/FavoritesProvider";
 import { Plus, X } from "lucide-react";
-import MovieBreadcrumbs from "./MovieBreadcrumbs";
+import MovieBreadcrumbs from "../components/movie-breadcrumbs";
 
 const renderSeasonInfo = (parentId: string, movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {

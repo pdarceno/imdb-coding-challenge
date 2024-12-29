@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getSeasonDetails } from "../services/api";
 import { SeasonDetailsType } from "../types/movies";
-import SeasonDetailsSkeleton from "./SeasonDetailsSkeleton";
-import MovieBreadcrumbs from "./MovieBreadcrumbs";
+import SeasonDetailsSkeleton from "./season-details-skeleton";
+import MovieBreadcrumbs from "@/components/movie-breadcrumbs";
 
 const SeasonDetails = () => {
   const { id, seasonNumber } = useParams();
