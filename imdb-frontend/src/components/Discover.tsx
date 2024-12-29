@@ -2,7 +2,7 @@ import { Search } from "lucide-react";
 import BadgeList from "./ui/badge-list";
 import { FavoriteMovie } from "@/types/favorites";
 import { useEffect, useState } from "react";
-import { getDiscoverSuggestions } from "@/services/get-api";
+import { getDiscoverSuggestions } from "@/services/api";
 
 const Discover = () => {
   const [suggestions, setSuggestions] = useState<FavoriteMovie[]>([]);

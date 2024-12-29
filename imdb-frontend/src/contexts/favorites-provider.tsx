@@ -9,7 +9,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { FavoriteMovie } from "@/types/favorites";
 import { isFavoritedFunction } from "@/utils/favorite";
-import { getFavorites, mockApiCall } from "@/services/get-api";
+import { getFavorites, mockApiCall } from "@/services/api";
 
 // Define context properties
 interface FavoritesContextProps {
@@ -22,6 +22,7 @@ interface FavoritesContextProps {
     episodeNumber?: string
   ) => Promise<void>;
   loading: Record<string, boolean>;
+  isLoading: boolean;
 }
 
 const FavoritesContext = createContext<FavoritesContextProps | undefined>(
@@ -33,28 +34,47 @@ interface FavoritesProviderProps {
 }
 
 export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
+  // Initialize with localStorage data first to prevent flash of no content
   const [favorites, setFavorites] = useState<FavoriteMovie[]>(() => {
-    // Load from localStorage on initial render
     const savedFavorites = localStorage.getItem("favorites");
     return savedFavorites ? JSON.parse(savedFavorites) : [];
   });
 
   const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  // Load initial favorites from API
+  // Load favorites from API (which will actually get from localStorage in this case)
   useEffect(() => {
     const loadFavorites = async () => {
       try {
+        setIsLoading(true);
         const data = await getFavorites();
-        setFavorites(data);
+        // Only update if we got data back and it's different from current state
+        if (data && JSON.stringify(data) !== JSON.stringify(favorites)) {
+          setFavorites(data as FavoriteMovie[]);
+        }
       } catch (error) {
         console.error("Error loading favorites:", error);
+        toast({
+          description: "Error loading favorites",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
       }
     };
 
     loadFavorites();
-  }, []);
+  }, [toast]);
+
+  // Sync favorites with localStorage whenever they change
+  useEffect(() => {
+    if (!isLoading) {
+      // Only sync after initial load
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+    }
+  }, [favorites, isLoading]);
 
   const toggleFavorite = useCallback(
     async (
@@ -64,7 +84,6 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
       episodeId?: string,
       episodeNumber?: string
     ) => {
-      // Key based on whether it's an episode or not
       const key = episodeNumber ? `${movieId}-${episodeId}` : movieId;
       setLoading((prev) => ({ ...prev, [key]: true }));
 
@@ -78,10 +97,10 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
           episodeId
         );
 
-        // Make API call
+        // Simulate API call
         await mockApiCall();
 
-        // Update local state
+        // Update state
         setFavorites((prev) =>
           isFavorited
             ? prev.filter((movie) =>
@@ -113,8 +132,8 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
         toast({
           title: isFavorited ? "Removed!" : "Added!",
           description: isFavorited
-            ? `${movieTitle} removed from favorites`
-            : `${movieTitle} added to favorites`,
+            ? `${movieTitle} has been removed from favorites database.`
+            : `${movieTitle} has been added to favorites database.`,
           variant: "default",
         });
       } catch (error) {
@@ -129,7 +148,9 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
     [favorites, toast]
   );
   return (
-    <FavoritesContext.Provider value={{ favorites, toggleFavorite, loading }}>
+    <FavoritesContext.Provider
+      value={{ favorites, toggleFavorite, loading, isLoading }}
+    >
       {children}
     </FavoritesContext.Provider>
   );

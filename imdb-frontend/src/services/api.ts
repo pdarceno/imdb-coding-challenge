@@ -101,12 +101,15 @@ export const getFavorites = async () => {
   // Simulate API delay
   await mockApiCall();
 
-  // simulate return favorites from localStorage.
+  // Get data from localStorage
   const savedFavorites = localStorage.getItem("favorites");
-  const mockFavorites = savedFavorites ? JSON.parse(savedFavorites) : [];
+  const favorites = savedFavorites ? JSON.parse(savedFavorites) : [];
+  const topFavorites = [...favorites].reverse().slice(0, 10);
 
-  movieCache.set(cacheKey, mockFavorites);
-  return mockFavorites;
+  // Cache the data
+  movieCache.set(cacheKey, topFavorites);
+
+  return topFavorites;
 };
 
 export const getDiscoverSuggestions = async () => {
@@ -121,8 +124,10 @@ export const getDiscoverSuggestions = async () => {
   // Simulate API delay
   await mockApiCall();
 
-  // Mock discover suggestions
-  const mockSuggestions = suggestedMovies;
+  // Random shuffle and get 10 items
+  const mockSuggestions = [...suggestedMovies]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 10);
 
   movieCache.set(cacheKey, mockSuggestions);
   return mockSuggestions;
