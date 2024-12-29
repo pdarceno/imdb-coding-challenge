@@ -13,7 +13,7 @@ const MovieList = ({ movies, title, isLoading }: MovieListProps) => {
   const skeletonCards = Array(10).fill(null);
 
   return (
-    <div className="w-full max-w-screen-xl mx-auto">
+    <div className="min-h-[calc(100vh-268.85px)] w-full max-w-screen-xl mx-auto">
       {title && (
         <h2 className="text-2xl font-bold text-white mb-4 sm:mb-6">{title}</h2>
       )}
