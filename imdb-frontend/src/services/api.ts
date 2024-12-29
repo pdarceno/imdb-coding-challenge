@@ -3,6 +3,15 @@ import { movieCache } from "../utils/cache";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Mock API call
+export const mockApiCall = async () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ success: true });
+    }, 750);
+  });
+};
+
 export const searchMovies = async (query: string, page: number = 1) => {
   const cacheKey = movieCache.createKey(query, page);
   const cachedData = movieCache.get(cacheKey);

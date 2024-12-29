@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
-import ClickableBadge from "@/components/ui/clickable-badge";
 import { suggestedMovies } from "@/constants";
+import BadgeList from "./ui/badge-list";
 
 const Discover = () => {
   return (
@@ -14,13 +14,7 @@ const Discover = () => {
       <div className="flex flex-col gap-4 text-primary">
         <p>Start with:</p>
         <div className="flex flex-wrap justify-center gap-3">
-          {suggestedMovies.map((movie) => (
-            <ClickableBadge
-              key={movie.id}
-              parentId={movie.id}
-              title={movie.title}
-            />
-          ))}
+          <BadgeList items={suggestedMovies} />
         </div>
       </div>
     </div>

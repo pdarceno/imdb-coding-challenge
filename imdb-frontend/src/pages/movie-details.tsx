@@ -218,6 +218,7 @@ const MovieDetails = () => {
                   id={id!}
                   title={movie.Title}
                   episodeId={movie.imdbID}
+                  seasonNumber={seasonNumber}
                   episodeNumber={episodeNumber}
                 />
               </div>

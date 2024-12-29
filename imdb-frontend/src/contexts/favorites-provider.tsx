@@ -9,15 +9,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { FavoriteMovie } from "@/types/favorites";
 import { isFavoritedFunction } from "@/utils/favorite";
-
-// Mock API call
-const mockApiCall = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ success: true });
-    }, 500);
-  });
-};
+import { mockApiCall } from "@/services/api";
 
 // Define context properties
 interface FavoritesContextProps {

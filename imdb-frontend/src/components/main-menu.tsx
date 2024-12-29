@@ -13,9 +13,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useFavorites } from "@/contexts/favorites-provider";
-import ClickableBadge from "@/components/ui/clickable-badge";
 import { suggestedMovies } from "@/constants";
 import ThemeToggle from "./theme-toggle";
+import BadgeList from "./ui/badge-list";
 
 const MainMenu = () => {
   const { favorites } = useFavorites();
@@ -62,13 +62,7 @@ const MainMenu = () => {
                   <div className="flex flex-col gap-2">
                     <p className="text-sm">Start with:</p>
                     <div className="flex flex-wrap gap-2">
-                      {suggestedMovies.map((movie) => (
-                        <ClickableBadge
-                          key={movie.id}
-                          parentId={movie.id}
-                          title={movie.title}
-                        />
-                      ))}
+                      <BadgeList items={suggestedMovies} />
                     </div>
                   </div>
                 </div>
@@ -92,16 +86,7 @@ const MainMenu = () => {
                     <div className="flex flex-col gap-2">
                       <p className="text-sm">Your top favorites:</p>
                       <div className="flex flex-wrap gap-2">
-                        {topFavorites.map((favorite) => (
-                          <ClickableBadge
-                            key={`${favorite.parentId}-${favorite.episodeId}`}
-                            parentId={favorite.parentId}
-                            title={favorite.title}
-                            seasonNumber={favorite.seasonNumber}
-                            episodeId={favorite.episodeId}
-                            episodeNumber={favorite.episodeNumber}
-                          />
-                        ))}
+                        <BadgeList items={topFavorites} />
                       </div>
                     </div>
                   ) : (

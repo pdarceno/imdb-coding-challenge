@@ -1,6 +1,6 @@
 import { Star } from "lucide-react";
 import { useFavorites } from "@/contexts/favorites-provider";
-import ClickableBadge from "@/components/ui/clickable-badge";
+import BadgeList from "./ui/badge-list";
 
 const Favorites = () => {
   const { favorites } = useFavorites();
@@ -19,16 +19,7 @@ const Favorites = () => {
           <>
             <p>Your top favorites:</p>
             <div className="flex flex-wrap justify-center gap-3">
-              {topFavorites.map((favorite) => (
-                <ClickableBadge
-                  key={`${favorite.parentId}-${favorite.episodeId}`}
-                  parentId={favorite.parentId}
-                  title={favorite.title}
-                  seasonNumber={favorite.seasonNumber}
-                  episodeId={favorite.episodeId}
-                  episodeNumber={favorite.episodeNumber}
-                />
-              ))}
+              <BadgeList items={topFavorites} />
             </div>
           </>
         ) : (
