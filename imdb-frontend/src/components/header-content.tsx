@@ -3,6 +3,7 @@ import { Search, X } from "lucide-react";
 import { SEARCH_CONSTANTS } from "@/constants";
 import ThemeToggle from "./theme-toggle";
 import MainMenu from "./main-menu";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderContentProps {
   onSearch: (query: string) => void;
@@ -13,6 +14,7 @@ const HeaderContent = ({ onSearch }: HeaderContentProps) => {
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const lastKeystrokeTime = useRef<number>(0);
   const lastSearchedQuery = useRef<string>("");
+  const navigate = useNavigate();
 
   const minDebounceTime = SEARCH_CONSTANTS.MIN_DEBOUNCE_TIME;
   const maxDebounceTime = SEARCH_CONSTANTS.MAX_DEBOUNCE_TIME;
@@ -94,6 +96,10 @@ const HeaderContent = ({ onSearch }: HeaderContentProps) => {
     setQuery(newValue);
   };
 
+  const handleLogoClick = () => {
+    navigate("/");
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedQuery = query.trim();
@@ -122,7 +128,10 @@ const HeaderContent = ({ onSearch }: HeaderContentProps) => {
 
   return (
     <div className="flex items-center w-full max-w-screen-xl mx-auto p-4 sm:p-6">
-      <div className="flex items-center mr-4 hidden sm:block">
+      <div
+        onClick={handleLogoClick}
+        className="flex items-center mr-4 hidden sm:block cursor-pointer hover:opacity-70"
+      >
         <img
           src="/imdb.svg"
           alt="imdb logo"
