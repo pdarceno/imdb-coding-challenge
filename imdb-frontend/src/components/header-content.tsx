@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Search, X } from "lucide-react";
 import { SEARCH_CONSTANTS } from "@/constants";
-import ThemeToggle from "./ThemeToggle";
-import MainMenu from "./MainMenu";
+import ThemeToggle from "./theme-toggle";
+import MainMenu from "./main-menu";
 
 interface HeaderContentProps {
   onSearch: (query: string) => void;

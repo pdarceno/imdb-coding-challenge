@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import ClickableBadge from "@/utils/ClickableBadge";
+import ClickableBadge from "@/components/ui/clickable-badge";
 import { suggestedMovies } from "@/constants";
 
 const Discover = () => {

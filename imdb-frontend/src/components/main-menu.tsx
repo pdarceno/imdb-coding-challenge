@@ -13,9 +13,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useFavorites } from "@/contexts/FavoritesProvider";
-import ClickableBadge from "@/utils/ClickableBadge";
+import ClickableBadge from "@/components/ui/clickable-badge";
 import { suggestedMovies } from "@/constants";
-import ThemeToggle from "./ThemeToggle";
+import ThemeToggle from "./theme-toggle";
 
 const MainMenu = () => {
   const { favorites } = useFavorites();

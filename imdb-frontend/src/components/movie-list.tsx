@@ -1,6 +1,6 @@
-import MovieCard from "./MovieCard";
+import MovieCard from "./movie-card";
 import { MovieSearchResultType } from "../types/movies";
-import MovieCardSkeleton from "./MovieCardSkeleton";
+import MovieCardSkeleton from "./movie-card-skeleton";
 
 interface MovieListProps {
   movies: MovieSearchResultType[];
