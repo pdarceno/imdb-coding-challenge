@@ -22,6 +22,20 @@ const createOmdbApi = (baseUrl: string, apiKey: string) => {
       client.get<MovieDetailsType>("/", {
         params: { i: id },
       }),
+
+    getSeasonDetails: (id: string, seasonNumber: number) =>
+      client.get<MovieDetailsType>("/", {
+        params: { i: id, Season: seasonNumber },
+      }),
+
+    getEpisodeDetails: (
+      id: string,
+      seasonNumber: number,
+      episodeNumber: number
+    ) =>
+      client.get<MovieDetailsType>("/", {
+        params: { i: id, Season: seasonNumber, Episode: episodeNumber },
+      }),
   };
 };
 

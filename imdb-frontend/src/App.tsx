@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MovieSearch from "./components/MovieSearch";
 import MovieDetails from "./components/MovieDetails";
+import SeasonDetails from "./components/SeasonDetails";
 import { useInvalidateCache } from "./hooks/useInvalidateCache";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -19,6 +20,14 @@ const App = () => {
           <Routes>
             <Route path="/" element={<MovieSearch />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
+            <Route
+              path="/movie/:id/season/:seasonNumber"
+              element={<SeasonDetails />}
+            />
+            <Route
+              path="/movie/:id/season/:seasonNumber/episode/:episodeNumber"
+              element={<MovieDetails />}
+            />
           </Routes>
           <Footer />
         </ThemeProvider>

@@ -15,6 +15,25 @@ export interface SearchResponseType {
   Error?: string; // Present only when Response is "False"
 }
 
+// New interface for episode in season listing
+export interface EpisodeInSeasonType {
+  Title: string;
+  Released: string;
+  Episode: string;
+  imdbRating: string;
+  imdbID: string;
+}
+
+// New interface for season details
+export interface SeasonDetailsType {
+  Title: string;
+  Season: string;
+  totalSeasons: string;
+  Episodes: EpisodeInSeasonType[];
+  Response: "True" | "False";
+  Error?: string;
+}
+
 export interface MovieDetailsType {
   // Core fields that should always be present
   Title: string;

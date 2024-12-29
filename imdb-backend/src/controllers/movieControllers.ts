@@ -29,6 +29,7 @@ export default function createMovieController(baseUrl: string, apiKey: string) {
     }
   };
 
+  // Get movie/show details endpoint
   const getMovieDetails: RequestHandler = async (req, res) => {
     try {
       const { id } = req.params;
@@ -42,8 +43,60 @@ export default function createMovieController(baseUrl: string, apiKey: string) {
     }
   };
 
+  // Get season details endpoint
+  const getSeasonDetails: RequestHandler = async (req, res) => {
+    try {
+      const { id, seasonNumber } = req.params;
+
+      if (!seasonNumber || isNaN(parseInt(seasonNumber))) {
+        res.status(400).json({ error: "Valid season number is required" });
+        return;
+      }
+
+      const response = await omdbApi.getSeasonDetails(
+        id,
+        parseInt(seasonNumber)
+      );
+      res.json(response.data);
+      return;
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch season details" });
+      return;
+    }
+  };
+
+  // Get episode details endpoint
+  const getEpisodeDetails: RequestHandler = async (req, res) => {
+    try {
+      const { id, seasonNumber, episodeNumber } = req.params;
+
+      if (!seasonNumber || isNaN(parseInt(seasonNumber))) {
+        res.status(400).json({ error: "Valid season number is required" });
+        return;
+      }
+
+      if (!episodeNumber || isNaN(parseInt(episodeNumber))) {
+        res.status(400).json({ error: "Valid episode number is required" });
+        return;
+      }
+
+      const response = await omdbApi.getEpisodeDetails(
+        id,
+        parseInt(seasonNumber),
+        parseInt(episodeNumber)
+      );
+      res.json(response.data);
+      return;
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch episode details" });
+      return;
+    }
+  };
+
   return {
     searchMovies,
     getMovieDetails,
+    getSeasonDetails,
+    getEpisodeDetails,
   };
 }

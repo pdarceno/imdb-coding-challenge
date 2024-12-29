@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getMovieDetails } from "../services/api";
+import { Link, useParams } from "react-router-dom";
+import { getEpisodeDetails, getMovieDetails } from "../services/api";
 import { MovieDetailsType } from "../types/movies";
 import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
 import { Badge } from "./ui/badge";
@@ -13,24 +13,47 @@ import {
 import { movieCache } from "../utils/cache";
 import { useFavorites } from "@/contexts/FavoritesProvider";
 import { Plus, X } from "lucide-react";
+import MovieBreadcrumbs from "./MovieBreadcrumbs";
 
-const renderSeasonInfo = (movie: MovieDetailsType) => {
+const renderSeasonInfo = (urlID: string, movie: MovieDetailsType) => {
   if (isTVSeries(movie) && isValidField(movie.totalSeasons)) {
+    const totalSeasons = parseInt(movie.totalSeasons!);
     return (
       <div>
         <h2 className="text-muted-foreground font-semibold mb-1">Seasons</h2>
-        <p>{movie.totalSeasons} Seasons</p>
+        <p>
+          {Array.from({ length: totalSeasons }, (_, i) => i + 1).map(
+            (seasonNum, index) => (
+              <span key={seasonNum}>
+                <Link
+                  to={`/movie/${movie.imdbID}/season/${seasonNum}`}
+                  className="hover:text-primary transition-colors"
+                >
+                  Season {seasonNum}
+                </Link>
+                {index < totalSeasons - 1 && (
+                  <span className="mx-2 text-muted-foreground">·</span>
+                )}
+              </span>
+            )
+          )}
+        </p>
       </div>
     );
   }
   if (isEpisode(movie)) {
     return (
       <div>
-        <h2 className="text-muted-foreground font-semibold mb-1">
-          Episode Info
-        </h2>
+        <h2 className="text-muted-foreground font-semibold mb-1">Other Info</h2>
         <p>
-          Season {movie.Season}, Episode {movie.Episode}
+          <Link
+            to={`/movie/${urlID}/season/${movie.Season}`}
+            className="hover:text-primary transition-colors"
+          >
+            Season {movie.Season}
+          </Link>
+          <span className="mx-2 text-muted-foreground">·</span>
+          Episode {movie.Episode}
         </p>
       </div>
     );
@@ -39,7 +62,7 @@ const renderSeasonInfo = (movie: MovieDetailsType) => {
 };
 
 const MovieDetails = () => {
-  const { id } = useParams();
+  const { id, seasonNumber, episodeNumber } = useParams();
   const [movie, setMovie] = useState<MovieDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [isCached, setIsCached] = useState(false);
@@ -49,41 +72,78 @@ const MovieDetails = () => {
     loading: loadingFavorite,
   } = useFavorites();
   const isFavorited = favorites.some((fav) => fav.id === id!);
+  const [seriesTitle, setSeriesTitle] = useState<string>("");
 
   useEffect(() => {
-    const fetchMovie = async () => {
+    const fetchData = async () => {
       if (!id) return;
 
       setLoading(true);
       try {
-        // Check if data is in cache
-        const cacheKey = `movie-${id}`;
-        const cachedData = movieCache.get<MovieDetailsType>(cacheKey);
+        let data;
+        let cacheKey;
 
-        if (cachedData) {
-          setMovie(cachedData);
-          setIsCached(true);
-          setLoading(false);
+        // If we're looking at an episode, first get the series title
+        if (seasonNumber && episodeNumber) {
+          // Try to get series title from cache first
+          const seriesCacheKey = `movie-${id}`;
+          const cachedSeriesData =
+            movieCache.get<MovieDetailsType>(seriesCacheKey);
 
-          return;
+          if (cachedSeriesData) {
+            setSeriesTitle(cachedSeriesData.Title);
+          } else {
+            // If not in cache, fetch series details
+            const seriesData = await getMovieDetails(id);
+            setSeriesTitle(seriesData.Title);
+            movieCache.set(seriesCacheKey, seriesData);
+          }
+
+          // Now get episode details
+          cacheKey = `episode-${id}-${seasonNumber}-${episodeNumber}`;
+          const cachedData = movieCache.get<MovieDetailsType>(cacheKey);
+
+          if (cachedData) {
+            setMovie(cachedData);
+            setIsCached(true);
+            setLoading(false);
+            return;
+          }
+
+          data = await getEpisodeDetails(
+            id,
+            parseInt(seasonNumber),
+            parseInt(episodeNumber)
+          );
+        } else {
+          // Regular movie/show details fetch
+          cacheKey = `movie-${id}`;
+          const cachedData = movieCache.get<MovieDetailsType>(cacheKey);
+
+          if (cachedData) {
+            setMovie(cachedData);
+            setSeriesTitle(cachedData.Title);
+            setIsCached(true);
+            setLoading(false);
+            return;
+          }
+
+          data = await getMovieDetails(id);
+          setSeriesTitle(data.Title);
         }
 
-        // If not in cache, fetch from API
-        const data = await getMovieDetails(id);
         setMovie(data);
         setIsCached(false);
-
-        // Store in cache
-        movieCache.set(cacheKey, data);
+        movieCache.set(cacheKey!, data);
       } catch (error) {
-        console.error("Error fetching movie:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMovie();
-  }, [id]);
+    fetchData();
+  }, [id, seasonNumber, episodeNumber]);
 
   if (loading) return <MovieDetailsSkeleton />;
 
@@ -120,6 +180,15 @@ const MovieDetails = () => {
         {/* Content */}
         <div className="relative max-w-screen-xl mx-auto py-4 sm:py-6">
           <div className="w-full px-5">
+            {/* Use seriesTitle for breadcrumbs */}
+            <MovieBreadcrumbs
+              title={seriesTitle}
+              id={id!}
+              seasonNumber={seasonNumber}
+              episodeNumber={episodeNumber}
+              currentTitle={movie?.Title} // Pass current episode title if needed
+              className="md:pb-2"
+            />
             {/* Title moved to top on mobile */}
             <h1 className="text-4xl font-bold text-foreground mb-1 md:hidden">
               {movie.Title}
@@ -320,7 +389,7 @@ const MovieDetails = () => {
                       </p>
                     </div>
                   )}
-                  {renderSeasonInfo(movie)}
+                  {renderSeasonInfo(id!, movie)}
                 </div>
 
                 {/* Additional Details */}
